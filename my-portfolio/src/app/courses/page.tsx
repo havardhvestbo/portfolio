@@ -73,7 +73,7 @@ export default function CoursesPage() {
       <section>
         <h1 className="text-4xl md:text-5xl font-bold leading-tight">Courses</h1>
         <p className="mt-3 text-white/80 text-lg">
-          Academic coursework from my Bachelor's and Master's degree programs.
+          Academic coursework from my Bachelor&apos;s and Master&apos;s degree programs.
         </p>
       </section>
 
@@ -105,7 +105,7 @@ export default function CoursesPage() {
 
       {/* BACHELOR'S COURSES */}
       <section>
-        <h2 className="text-2xl font-semibold">Bachelor's Degree</h2>
+        <h2 className="text-2xl font-semibold">Bachelor&apos;s Degree</h2>
         <ul className="mt-6 grid gap-4 sm:grid-cols-2">
           {bachelorCourses.map((course) => (
             <li
@@ -149,7 +149,7 @@ export default function CoursesPage() {
 
       {/* MASTER'S COURSES */}
       <section>
-        <h2 className="text-2xl font-semibold">Master's Degree</h2>
+        <h2 className="text-2xl font-semibold">Master&apos;s Degree</h2>
         <ul className="mt-6 grid gap-4 sm:grid-cols-2">
           {masterCourses.map((course) => (
             <li
