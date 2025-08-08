@@ -1,5 +1,5 @@
 export const siteConfig = {
-  name: "Håvard Vestbø — Portfolio",
+  name: "Håvard - portfolio",
   description: "Projects, education, and contact.",
   url: "https://your-domain.com", // Update with your actual domain
   ogImage: "/og-image.jpg", // Add an OG image if you have one
