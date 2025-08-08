@@ -74,7 +74,7 @@ export default function HomePage() {
           initial={{ y: 0 }}
           animate={{ y: [0, -6, 0] }}
           transition={{ duration: 5, repeat: Infinity }}
-          className="order-2 md:order-1 relative h-48 w-48 md:h-60 md:w-60 overflow-hidden rounded-2xl ring-2 ring-primary/60 shadow-[0_0_50px_-12px_rgba(250,204,21,0.35)] self-start"
+          className="order-1 md:order-1 relative h-48 w-48 md:h-60 md:w-60 overflow-hidden rounded-2xl ring-2 ring-primary/60 shadow-[0_0_50px_-12px_rgba(250,204,21,0.35)] self-start mx-auto md:mx-0"
         >
           <Image
             src={personalInfo.image}
@@ -87,7 +87,7 @@ export default function HomePage() {
         </motion.div>
 
         {/* Headline + CTAs */}
-        <div className="order-1 md:order-2">
+        <div className="order-2 md:order-2 text-center md:text-left">
           <motion.span
             {...fadeUp}
             className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs"
@@ -109,14 +109,14 @@ export default function HomePage() {
             transition={{ ...fadeUp.transition, delay: 0.12 }}
             className="mt-4 max-w-2xl text-white/80 text-xl md:text-2xl"
           >
-            I’m a Master’s student in Management of Technology and a Computer Engineering grad,
+            I'm a Master's student in Management of Technology and a Computer Engineering grad,
             growing into a frontend & full-stack developer — and a future tech/project lead.
           </motion.p>
 
           <motion.div
             {...fadeUp}
             transition={{ ...fadeUp.transition, delay: 0.2 }}
-            className="mt-8 flex flex-wrap gap-3"
+            className="mt-8 flex flex-wrap gap-3 justify-center md:justify-start"
           >
             <Link
               href="/projects"
