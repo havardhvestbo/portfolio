@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Navbar } from "../components/Navbar";
+import { siteConfig } from "@/data";
 
 export const metadata: Metadata = {
-  title: "Håvard Vestbø — Portfolio",
-  description: "Projects, education, and contact.",
+  title: siteConfig.name,
+  description: siteConfig.description,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

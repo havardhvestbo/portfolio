@@ -4,13 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaGithub, FaLinkedin, FaBars, FaTimes } from "react-icons/fa";
-
-const links = [
-  { href: "/", label: "Home" },
-  { href: "/projects", label: "Projects" },
-  { href: "/about", label: "About" },
-  { href: "/cv", label: "CV" },
-];
+import { navLinks, personalInfo } from "@/data";
 
 function NavLink({
   href,
@@ -51,7 +45,7 @@ export function Navbar() {
 
         {/* Center (desktop): nav links */}
         <nav className="hidden sm:flex items-center gap-1">
-          {links.map((l) => (
+          {navLinks.map((l) => (
             <NavLink key={l.href} {...l} />
           ))}
         </nav>
@@ -61,8 +55,8 @@ export function Navbar() {
           {/* Social icons: always visible, left of the hamburger on mobile */}
           <div className="flex items-center gap-3 text-lg">
             <Link
-              href="https://github.com/havardhvestbo"
-              aria-label="GitHub"
+              href={personalInfo.social.github.url}
+              aria-label={personalInfo.social.github.label}
               className="opacity-80 hover:opacity-100"
               target="_blank"
               rel="noreferrer"
@@ -70,8 +64,8 @@ export function Navbar() {
               <FaGithub />
             </Link>
             <Link
-              href="https://www.linkedin.com/in/h%C3%A5vard-hetland-vestb%C3%B8-0a9324151/"
-              aria-label="LinkedIn"
+              href={personalInfo.social.linkedin.url}
+              aria-label={personalInfo.social.linkedin.label}
               className="opacity-80 hover:opacity-100"
               target="_blank"
               rel="noreferrer"
@@ -94,7 +88,7 @@ export function Navbar() {
       {/* Mobile dropdown: only the page links */}
       {open && (
         <div className="sm:hidden border-t border-white/10 bg-background/95 px-4 py-3 space-y-2">
-          {links.map((l) => (
+          {navLinks.map((l) => (
             <NavLink key={l.href} {...l} onClick={() => setOpen(false)} />
           ))}
         </div>
