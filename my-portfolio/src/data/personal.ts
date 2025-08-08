@@ -2,7 +2,7 @@ export const personalInfo = {
   name: "Håvard Hetland Vestbø",
   title: "Computer Engineering (BSc) & Management of Technology (MSc)",
   description:
-    "I build clean, pragmatic web and mobile applications with a focus on UX, performance, and long-term maintainability.",
+    "I’m a Master’s student in Management of Technology and Computer Engineering graduate, passionate about crafting frontend and full-stack applications that make a difference.",
   status: "Available for projects",
   image: "/me.jpeg",
   imageAlt: "Portrait of Håvard",
