@@ -37,9 +37,9 @@ export default function HomePage() {
   return (
     <div className="space-y-16">
       {/* HERO */}
-      <section className="hero-bg relative grid items-center gap-10 md:grid-cols-[180px_1fr]">
+      <section className="hero-bg relative grid items-start gap-10 md:grid-cols-[180px_1fr]">
         {/* Replace with your portrait at public/me.jpeg */}
-        <div className="relative h-44 w-44 md:h-48 md:w-48 overflow-hidden rounded-2xl ring-2 ring-primary/60 shadow-[0_0_40px_-10px_rgba(250,204,21,0.35)]">
+        <div className="relative h-44 w-44 md:h-48 md:w-48 overflow-hidden rounded-2xl ring-2 ring-primary/60 shadow-[0_0_40px_-10px_rgba(250,204,21,0.35)] self-start">
           <Image
             src={personalInfo.image}
             alt={personalInfo.imageAlt}
