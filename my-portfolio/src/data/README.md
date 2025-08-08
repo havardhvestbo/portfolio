@@ -31,6 +31,13 @@ Contains professional and educational data:
 - Skills and proficiency levels
 - Categorized by type (frontend, backend, tools, etc.)
 
+### `courses.ts`
+Contains detailed academic coursework:
+- Course information (code, title, institution)
+- Credits, grades, and semester details
+- Course topics and technologies
+- Helper functions to filter by level and category
+
 ### `config.ts`
 Contains site-wide configuration:
 - Site metadata (name, description, URL)
