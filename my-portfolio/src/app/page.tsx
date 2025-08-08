@@ -9,7 +9,7 @@ export default function HomePage() {
         {/* Replace with your portrait at public/me.jpg */}
         <div className="relative h-44 w-44 md:h-48 md:w-48 overflow-hidden rounded-2xl ring-2 ring-primary/60 shadow-[0_0_40px_-10px_rgba(250,204,21,0.35)]">
           <Image
-            src="/me.jpg"
+            src="/me.jpeg"
             alt="Portrait of Håvard"
             fill
             className="object-cover"
