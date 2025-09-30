@@ -25,109 +25,94 @@ A modern, responsive portfolio website built with Next.js 15, showcasing my proj
 ## 📁 Project Structure
 
 ```
-my-portfolio/
-├── src/
-│   ├── app/                 # Next.js app router pages
-│   │   ├── page.tsx         # Homepage
-│   │   ├── layout.tsx       # Root layout
-│   │   ├── about/           # About page
-│   │   ├── courses/         # Courses page
-│   │   ├── cv/              # CV page
-│   │   └── projects/        # Projects page
-│   ├── components/          # Reusable React components
-│   │   ├── Navbar.tsx       # Navigation component
-│   │   ├── TechChips.tsx    # Technology skill chips
-│   │   └── TechMarquee.tsx  # Scrolling tech marquee
-│   └── data/                # Static data and configuration
-│       ├── config.ts        # Site configuration
-│       ├── personal.ts      # Personal information
-│       ├── projects.ts      # Project data
-│       ├── experience.ts    # Work experience
-│       ├── courses.ts       # Educational courses
-│       └── navigation.ts    # Navigation menu items
-├── public/                  # Static assets
-└── README.md               # This file
+portfolio/
+├── backend/                         # ASP.NET Core Web API (portfolio data service)
+│   ├── Controllers/                 # REST controllers (single PortfolioController)
+│   ├── Models/                      # Shared DTO/record definitions
+│   ├── Services/                    # In-memory data provider
+│   └── Portfolio.Api.csproj         # .NET project file
+├── my-portfolio/                    # Next.js 15 frontend application
+│   ├── src/
+│   │   ├── app/                     # Next.js app router pages
+│   │   ├── components/              # Reusable React components
+│   │   ├── lib/                     # API helpers for backend communication
+│   │   └── types/                   # Shared TypeScript contracts
+│   ├── public/                      # Static assets
+│   └── .env.example                 # Sample environment variables
+└── README.md                        # This file
 ```
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
+- .NET SDK 8.0+
 - npm, yarn, or pnpm
 
-### Installation
+### Clone the repository
 
-1. **Clone the repository**
+```bash
+git clone https://github.com/havardhvestbo/portfolio.git
+cd portfolio
+```
+
+### Backend (ASP.NET Core)
+
+1. Install dependencies & run the API
    ```bash
-   git clone https://github.com/havardhvestbo/portfolio.git
-   cd portfolio/my-portfolio
+   cd backend
+   dotnet restore
+   dotnet run
    ```
+   The API listens on `http://localhost:5000` by default (see `Properties/launchSettings.json`).
 
-2. **Install dependencies**
+### Frontend (Next.js)
+
+1. Configure environment variables
+   ```bash
+   cd ../my-portfolio
+   cp .env.example .env.local   # optional: adjust NEXT_PUBLIC_API_BASE_URL if needed
+   ```
+2. Install dependencies and start the dev server
    ```bash
    npm install
-   # or
-   yarn install
-   # or
-   pnpm install
-   ```
-
-3. **Start the development server**
-   ```bash
    npm run dev
-   # or
-   yarn dev
-   # or
-   pnpm dev
    ```
-
-4. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000) to see the portfolio.
+3. Open [http://localhost:3000](http://localhost:3000) to browse the site.
 
 ## 📝 Customization
 
-### Personal Information
-Update your personal details in `src/data/personal.ts`:
-```typescript
-export const personalInfo = {
-  name: "Your Name",
-  title: "Your Title",
-  description: "Your description",
-  // ... more fields
-};
-```
+All display data lives in the ASP.NET Core service (`backend/Services/InMemoryPortfolioDataService.cs`).
+Update the relevant builder functions (e.g. `BuildPersonalInfo`, `BuildProjects`, `BuildCourses`) to change the content returned by the API, or replace the in-memory implementation with a database-backed service.
 
-### Projects
-Add your projects in `src/data/projects.ts`:
-```typescript
-export const projects = [
-  {
-    id: "project-id",
-    title: "Project Title",
-    description: "Project description",
-    // ... more fields
-  }
-];
-```
-
-### Site Configuration
-Update site-wide settings in `src/data/config.ts`:
-```typescript
-export const siteConfig = {
-  name: "Your Portfolio",
-  description: "Your description",
-  url: "https://yourdomain.com",
-  // ... more settings
-};
-```
+Whenever you change backend data, restart `dotnet run` so the new snapshot is served to the frontend.
 
 ## 📚 Available Scripts
 
-- `npm run dev` - Start development server with Turbopack
-- `npm run build` - Build the application for production
-- `npm run start` - Start the production server
-- `npm run lint` - Run ESLint for code quality
+**Backend**
+- `dotnet run` (from `backend/`) – Start the ASP.NET Core API
+- `dotnet build` – Compile the backend project
+
+**Frontend**
+- `npm run dev` – Start the Next.js dev server with Turbopack
+- `npm run build` – Create a production build
+- `npm run start` – Launch the production server
+- `npm run lint` – Run ESLint for code quality
+
+## 🔌 API Endpoints
+
+The backend exposes the following JSON endpoints under `/api/portfolio`:
+
+- `/` – Complete portfolio snapshot (all sections in one payload)
+- `/personal` – Personal information and social links
+- `/config` – Site metadata (name, description, colors, social URLs)
+- `/navigation` – Navigation items for the frontend
+- `/projects` & `/projects/featured` – Full and featured project lists
+- `/experiences` – Professional experience entries
+- `/education` – Education history
+- `/skills` – Skill matrix
+- `/courses` – Course catalogue with credits/grades
 
 ## 🎯 Pages
 

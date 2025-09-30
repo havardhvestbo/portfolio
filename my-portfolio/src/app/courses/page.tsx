@@ -1,34 +1,16 @@
-import { courses } from "@/data";
 import { TechChips } from "@/components/TechChips";
+import { getCourses } from "@/lib/api";
+import type { Course, CourseCategory, CourseLevel, CourseSemester } from "@/types/portfolio";
 
-type Level = "bachelor" | "master" | "phd" | "certificate" | "online";
-type Category =
-  | "programming"
-  | "mathematics"
-  | "engineering"
-  | "management"
-  | "research"
-  | "design"
-  | "other";
-
-// ---- Local helpers (avoid importing missing exports) ----
-const getCoursesByLevel = (level: Level) =>
-  courses.filter((c) => c.level === level);
-
-const getCoursesByCategory = (category: Category) =>
-  courses.filter((c) => c.category === category);
+type CoursesByCategory = Partial<Record<CourseCategory, Course[]>>;
 
 const formatCredits = (credits?: number) => (credits ? `${credits} ECTS` : "");
 
-const formatSemester = (
-  semester?: "spring" | "fall" | "summer",
-  year?: string
-) =>
+const formatSemester = (semester?: CourseSemester, year?: string) =>
   semester && year
     ? `${semester.charAt(0).toUpperCase() + semester.slice(1)} ${year}`
     : year || "";
 
-// ECTS-weighted average (A=5, B=4, C=3, D=2, E=1, F=0). Ignores Pass/No grade.
 const letterToPoints: Record<string, number> = {
   A: 5,
   B: 4,
@@ -37,39 +19,64 @@ const letterToPoints: Record<string, number> = {
   E: 1,
   F: 0,
 };
-function calcWeightedAverageECTS() {
-  let pts = 0;
+
+function calcWeightedAverageECTS(courses: Course[]) {
+  let points = 0;
   let ects = 0;
-  for (const c of courses) {
-    if (!c.grade || !(c.grade in letterToPoints) || !c.credits) continue;
-    pts += letterToPoints[c.grade] * c.credits;
-    ects += c.credits;
+
+  for (const course of courses) {
+    if (!course.grade || !(course.grade in letterToPoints) || !course.credits) continue;
+    points += letterToPoints[course.grade] * course.credits;
+    ects += course.credits;
   }
+
   if (ects === 0) return null;
-  return pts / ects;
+  return points / ects;
 }
 
-export default function CoursesPage() {
-  const bachelorCourses = getCoursesByLevel("bachelor");
-  const masterCourses = getCoursesByLevel("master");
+const groupByLevel = (courses: Course[], level: CourseLevel) =>
+  courses.filter((course) => course.level === level);
 
-  const coursesByCategory: Partial<Record<Category, typeof courses>> = {
-    programming: getCoursesByCategory("programming"),
-    mathematics: getCoursesByCategory("mathematics"),
-    engineering: getCoursesByCategory("engineering"),
-    management: getCoursesByCategory("management"),
-    research: getCoursesByCategory("research"),
-    // include the others if you later add them:
-    // design: getCoursesByCategory("design"),
-    // other: getCoursesByCategory("other"),
-  };
+const buildCategories = (courses: Course[]): CoursesByCategory => {
+  const buckets: CoursesByCategory = {};
 
-  const totalECTS = courses.reduce((sum, c) => sum + (c.credits || 0), 0);
-  const weightedAvg = calcWeightedAverageECTS();
+  for (const course of courses) {
+    const key = course.category;
+    if (!buckets[key]) {
+      buckets[key] = [];
+    }
+    buckets[key]!.push(course);
+  }
+
+  return buckets;
+};
+
+export default async function CoursesPage() {
+  let courses: Course[] = [];
+
+  try {
+    courses = await getCourses();
+  } catch (error) {
+    console.error("Failed to load courses", error);
+  }
+
+  if (courses.length === 0) {
+    return (
+      <div className="space-y-4">
+        <h1 className="text-3xl font-bold">Courses</h1>
+        <p className="text-white/70">Course information is unavailable at the moment.</p>
+      </div>
+    );
+  }
+
+  const bachelorCourses = groupByLevel(courses, "bachelor");
+  const masterCourses = groupByLevel(courses, "master");
+  const coursesByCategory = buildCategories(courses);
+  const totalECTS = courses.reduce((sum, course) => sum + (course.credits ?? 0), 0);
+  const weightedAvg = calcWeightedAverageECTS(courses);
 
   return (
     <div className="space-y-16">
-      {/* HEADER */}
       <section>
         <h1 className="text-4xl md:text-5xl font-bold leading-tight">Courses</h1>
         <p className="mt-3 text-white/80 text-lg">
@@ -77,7 +84,6 @@ export default function CoursesPage() {
         </p>
       </section>
 
-      {/* OVERVIEW STATS */}
       <section>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-2xl border border-white/10 p-5">
@@ -103,7 +109,6 @@ export default function CoursesPage() {
         </div>
       </section>
 
-      {/* BACHELOR'S COURSES */}
       <section>
         <h2 className="text-2xl font-semibold">Bachelor&apos;s Degree</h2>
         <ul className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -115,9 +120,7 @@ export default function CoursesPage() {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-mono text-white/50">
-                      {course.code}
-                    </span>
+                    <span className="text-xs font-mono text-white/50">{course.code}</span>
                     {course.grade && (
                       <span className="text-xs px-2 py-0.5 rounded bg-primary/20 text-primary">
                         {course.grade}
@@ -147,7 +150,6 @@ export default function CoursesPage() {
         </ul>
       </section>
 
-      {/* MASTER'S COURSES */}
       <section>
         <h2 className="text-2xl font-semibold">Master&apos;s Degree</h2>
         <ul className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -159,9 +161,7 @@ export default function CoursesPage() {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-mono text-white/50">
-                      {course.code}
-                    </span>
+                    <span className="text-xs font-mono text-white/50">{course.code}</span>
                     {course.grade && (
                       <span className="text-xs px-2 py-0.5 rounded bg-primary/20 text-primary">
                         {course.grade}
@@ -191,21 +191,17 @@ export default function CoursesPage() {
         </ul>
       </section>
 
-      {/* COURSES BY CATEGORY */}
       <section>
         <h2 className="text-2xl font-semibold">By Category</h2>
         <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {Object.entries(coursesByCategory).map(([category, categoryCourses]) =>
-            categoryCourses && categoryCourses.length > 0 ? (
-              <div
-                key={category}
-                className="rounded-2xl border border-white/10 p-5"
-              >
+          {Object.entries(coursesByCategory).map(([category, entries]) =>
+            entries && entries.length > 0 ? (
+              <div key={category} className="rounded-2xl border border-white/10 p-5">
                 <h3 className="text-lg font-medium capitalize mb-3">
                   {category.replace(/([A-Z])/g, " $1").trim()}
                 </h3>
                 <div className="space-y-2">
-                  {categoryCourses.map((course) => (
+                  {entries.map((course) => (
                     <div key={course.id} className="text-sm">
                       <div className="font-medium">{course.title}</div>
                       <div className="text-white/50 text-xs">
@@ -219,14 +215,6 @@ export default function CoursesPage() {
           )}
         </div>
       </section>
-
-      {/* NOTE */}
-      {/* Remove this once you're happy with the data */}
-      {/* <section className="text-center">
-        <p className="text-sm text-white/50">
-          * Placeholder data - update with your actual course information
-        </p>
-      </section> */}
     </div>
   );
 }

@@ -4,80 +4,81 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaGithub, FaLinkedin, FaBars, FaTimes } from "react-icons/fa";
-import { navLinks, personalInfo } from "@/data";
+import type { NavLink as NavItem, SocialLink } from "@/types/portfolio";
 
-function NavLink({
-  href,
-  label,
-  onClick,
-}: {
-  href: string;
-  label: string;
+type NavbarProps = {
+  navLinks: NavItem[];
+  social: Record<string, SocialLink>;
+};
+
+type LinkProps = NavItem & {
   onClick?: () => void;
-}) {
+};
+
+function NavLink({ href, label, onClick }: LinkProps) {
   const pathname = usePathname();
   const active = pathname === href;
+
   return (
     <Link
       href={href}
       onClick={onClick}
-      className={
-        "px-3 py-2 rounded-lg transition hover:bg-white/5 block " +
-        (active ? "bg-white/10" : "")
-      }
+      className={`px-3 py-2 rounded-lg transition hover:bg-white/5 block ${active ? "bg-white/10" : ""}`}
     >
       {label}
     </Link>
   );
 }
 
-export function Navbar() {
+export function Navbar({ navLinks, social }: NavbarProps) {
   const [open, setOpen] = useState(false);
+
+  const github = social?.github;
+  const linkedin = social?.linkedin;
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 backdrop-blur bg-background/80">
       <div className="container-page flex items-center justify-between py-3">
-        {/* Left: logo */}
         <Link href="/" className="flex items-center gap-2">
           <div className="h-3 w-3 rounded-full bg-primary" />
           <span className="font-semibold">Håvard</span>
         </Link>
 
-        {/* Center (desktop): nav links */}
         <nav className="hidden sm:flex items-center gap-1">
-          {navLinks.map((l) => (
-            <NavLink key={l.href} {...l} />
+          {navLinks.map((link) => (
+            <NavLink key={link.href} {...link} />
           ))}
         </nav>
 
-        {/* Right cluster: icons (always visible) + hamburger (mobile) */}
         <div className="flex items-center gap-3">
-          {/* Social icons: always visible, left of the hamburger on mobile */}
           <div className="flex items-center gap-3 text-lg">
-            <Link
-              href={personalInfo.social.github.url}
-              aria-label={personalInfo.social.github.label}
-              className="opacity-80 hover:opacity-100"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <FaGithub />
-            </Link>
-            <Link
-              href={personalInfo.social.linkedin.url}
-              aria-label={personalInfo.social.linkedin.label}
-              className="opacity-80 hover:opacity-100"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <FaLinkedin />
-            </Link>
+            {github && (
+              <Link
+                href={github.url}
+                aria-label={github.label}
+                className="opacity-80 hover:opacity-100"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <FaGithub />
+              </Link>
+            )}
+            {linkedin && (
+              <Link
+                href={linkedin.url}
+                aria-label={linkedin.label}
+                className="opacity-80 hover:opacity-100"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <FaLinkedin />
+              </Link>
+            )}
           </div>
 
-          {/* Hamburger: only on mobile, aligned to the far right */}
           <button
             className="sm:hidden text-xl"
-            onClick={() => setOpen(!open)}
+            onClick={() => setOpen((prev) => !prev)}
             aria-label="Toggle menu"
           >
             {open ? <FaTimes /> : <FaBars />}
@@ -85,11 +86,10 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile dropdown: only the page links */}
       {open && (
         <div className="sm:hidden border-t border-white/10 bg-background/95 px-4 py-3 space-y-2">
-          {navLinks.map((l) => (
-            <NavLink key={l.href} {...l} onClick={() => setOpen(false)} />
+          {navLinks.map((link) => (
+            <NavLink key={link.href} {...link} onClick={() => setOpen(false)} />
           ))}
         </div>
       )}

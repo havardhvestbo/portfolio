@@ -1,7 +1,25 @@
 import Link from "next/link";
-import { projects } from "@/data";
+import { getProjects } from "@/lib/api";
+import type { Project } from "@/types/portfolio";
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  let projects: Project[] = [];
+
+  try {
+    projects = await getProjects();
+  } catch (error) {
+    console.error("Failed to load projects", error);
+  }
+
+  if (projects.length === 0) {
+    return (
+      <div className="space-y-3">
+        <h1 className="text-3xl font-bold">Projects</h1>
+        <p className="text-white/70">Project data is unavailable at the moment.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       <div>
@@ -25,10 +43,10 @@ export default function ProjectsPage() {
                 <span className="text-sm text-white/50">{project.year}</span>
               )}
             </div>
-            
+
             <p className="mt-3 text-white/70">{project.description}</p>
-            
-            {project.technologies && (
+
+            {project.technologies && project.technologies.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-2">
                 {project.technologies.map((tech) => (
                   <span
@@ -40,7 +58,7 @@ export default function ProjectsPage() {
                 ))}
               </div>
             )}
-            
+
             {project.links && (
               <div className="mt-4 flex gap-3">
                 {project.links.github && (

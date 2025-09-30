@@ -1,13 +1,26 @@
-import { experiences, education, skills } from "@/data";
+import { getEducation, getExperiences, getSkills } from "@/lib/api";
+import type { Education, Experience, Skill } from "@/types/portfolio";
 
-export default function CVPage() {
-  const groupedSkills = skills.reduce((acc, skill) => {
-    if (!acc[skill.category]) {
-      acc[skill.category] = [];
-    }
+export default async function CVPage() {
+  let experiences: Experience[] = [];
+  let education: Education[] = [];
+  let skills: Skill[] = [];
+
+  try {
+    [experiences, education, skills] = await Promise.all([
+      getExperiences(),
+      getEducation(),
+      getSkills(),
+    ]);
+  } catch (error) {
+    console.error("Failed to load CV data", error);
+  }
+
+  const groupedSkills = skills.reduce<Record<string, Skill[]>>((acc, skill) => {
+    acc[skill.category] = acc[skill.category] ?? [];
     acc[skill.category].push(skill);
     return acc;
-  }, {} as Record<string, typeof skills>);
+  }, {});
 
   return (
     <div className="space-y-12">
@@ -18,7 +31,6 @@ export default function CVPage() {
         </p>
       </div>
 
-      {/* Experience */}
       <section>
         <h2 className="text-2xl font-semibold mb-6">Experience</h2>
         <div className="space-y-6">
@@ -50,7 +62,7 @@ export default function CVPage() {
                   <span className="text-sm text-white/50">{exp.period}</span>
                 </div>
                 <p className="mt-3 text-white/80">{exp.description}</p>
-                {exp.technologies && (
+                {exp.technologies && exp.technologies.length > 0 && (
                   <div className="mt-4 flex flex-wrap gap-2">
                     {exp.technologies.map((tech) => (
                       <span
@@ -69,10 +81,13 @@ export default function CVPage() {
               </div>
             );
           })}
+
+          {experiences.length === 0 && (
+            <p className="text-white/60">Experience data is unavailable right now.</p>
+          )}
         </div>
       </section>
 
-      {/* Education */}
       <section>
         <h2 className="text-2xl font-semibold mb-6">Education</h2>
         <div className="space-y-6">
@@ -96,10 +111,13 @@ export default function CVPage() {
               )}
             </div>
           ))}
+
+          {education.length === 0 && (
+            <p className="text-white/60">Education data is unavailable right now.</p>
+          )}
         </div>
       </section>
 
-      {/* Skills */}
       <section>
         <h2 className="text-2xl font-semibold mb-6">Skills</h2>
         <div className="grid gap-6 md:grid-cols-2">
@@ -109,7 +127,7 @@ export default function CVPage() {
               className="rounded-2xl border border-white/10 p-6"
             >
               <h3 className="text-lg font-semibold capitalize mb-3">
-                {category.replace(/([A-Z])/g, ' $1').trim()}
+                {category.replace(/([A-Z])/g, " $1").trim()}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {categorySkills.map((skill) => (
@@ -128,6 +146,10 @@ export default function CVPage() {
               </div>
             </div>
           ))}
+
+          {skills.length === 0 && (
+            <p className="text-white/60">Skill data is unavailable right now.</p>
+          )}
         </div>
       </section>
     </div>
