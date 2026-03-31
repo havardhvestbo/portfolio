@@ -144,7 +144,7 @@ body {
   opacity: 0.03;
 }
 
-.grain-shell > :not(header):not(.floating-theme-toggle) {
+.grain-shell > :not(header):not(.floating-theme-toggle):not(.mobile-nav-overlay) {
   position: relative;
   z-index: 1;
 }
@@ -154,6 +154,10 @@ body {
   right: 1.25rem;
   bottom: 1.25rem;
   z-index: 70;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    visibility 0.2s ease;
 }
 
 @media (min-width: 640px) {
@@ -161,6 +165,18 @@ body {
     right: 1.5rem;
     bottom: 1.5rem;
   }
+}
+
+body[data-mobile-nav-open="true"] .floating-theme-toggle {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transform: translateY(0.5rem);
+}
+
+body[data-mobile-nav-open="true"].grain-shell > header {
+  opacity: 0;
+  pointer-events: none;
 }
 
 ::selection {
@@ -361,12 +377,22 @@ button {
 }
 
 .mobile-nav-backdrop {
-  background: rgba(20, 16, 10, 0.22);
-  backdrop-filter: blur(4px);
+  border: 0;
+  background: rgba(20, 16, 10, 0.34);
+  backdrop-filter: blur(6px);
   animation: mobile-nav-fade 180ms ease;
 }
 
+.dark .mobile-nav-backdrop {
+  background: rgba(5, 4, 3, 0.52);
+}
+
 .mobile-nav-sheet {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: auto;
   border-left: 1px solid var(--border);
   border-top-left-radius: 1.75rem;
   border-bottom-left-radius: 1.75rem;
@@ -374,8 +400,9 @@ button {
     linear-gradient(180deg, rgba(253, 250, 245, 0.96), rgba(237, 231, 218, 0.94)),
     linear-gradient(150deg, rgba(196, 155, 42, 0.08), transparent 46%);
   box-shadow:
-    0 22px 60px -24px rgba(20, 16, 10, 0.24),
-    0 10px 24px -18px rgba(139, 105, 20, 0.16);
+    0 24px 64px -28px rgba(20, 16, 10, 0.28),
+    0 10px 24px -18px rgba(139, 105, 20, 0.18);
+  backdrop-filter: blur(14px);
   animation: mobile-nav-slide-in 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 

@@ -90,8 +90,11 @@ export function Navbar({ navLinks, social }: NavbarProps) {
       return;
     }
 
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const { body } = document;
+    const originalOverflow = body.style.overflow;
+    const originalMobileNavOpen = body.dataset.mobileNavOpen;
+    body.style.overflow = "hidden";
+    body.dataset.mobileNavOpen = "true";
     const firstFocusable = mobileMenuRef.current?.querySelector<HTMLElement>(
       "button, a, [tabindex]:not([tabindex='-1'])",
     );
@@ -106,7 +109,12 @@ export function Navbar({ navLinks, social }: NavbarProps) {
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.body.style.overflow = originalOverflow;
+      body.style.overflow = originalOverflow;
+      if (originalMobileNavOpen === undefined) {
+        delete body.dataset.mobileNavOpen;
+      } else {
+        body.dataset.mobileNavOpen = originalMobileNavOpen;
+      }
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [open]);
@@ -158,9 +166,14 @@ export function Navbar({ navLinks, social }: NavbarProps) {
   return (
     <>
       <header
+        aria-hidden={open}
         className={[
-          "fixed inset-x-0 top-0 z-50 border-b border-border-light/80 bg-[var(--navbar-bg)] backdrop-blur-md transition-transform duration-300 ease-out will-change-transform",
-          isVisible ? "translate-y-0" : "-translate-y-full",
+          "fixed inset-x-0 top-0 z-50 border-b border-border-light/80 bg-[var(--navbar-bg)] backdrop-blur-md transition-[transform,opacity] duration-300 ease-out will-change-transform",
+          open
+            ? "translate-y-0 opacity-0 pointer-events-none"
+            : isVisible
+              ? "translate-y-0 opacity-100"
+              : "-translate-y-full opacity-100",
         ].join(" ")}
       >
         <div className="editorial-container flex h-16 items-center justify-between gap-6">
@@ -213,31 +226,38 @@ export function Navbar({ navLinks, social }: NavbarProps) {
           </div>
 
           <div className="flex items-center gap-3 lg:hidden">
-            <button
-              type="button"
-              onClick={() => setOpen((value) => !value)}
-              aria-expanded={open}
-              aria-label={open ? "Close navigation menu" : "Open navigation menu"}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-copy hover:border-primary hover:text-primary"
-            >
-              {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-            </button>
+            {open ? (
+              <span aria-hidden className="inline-flex h-10 w-10 shrink-0" />
+            ) : (
+              <button
+                type="button"
+                onClick={() => setOpen(true)}
+                aria-expanded={false}
+                aria-label="Open navigation menu"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-copy hover:border-primary hover:text-primary"
+              >
+                <Menu className="h-4 w-4" />
+              </button>
+            )}
           </div>
         </div>
       </header>
 
       {open ? (
-        <div className="fixed inset-0 z-[60] lg:hidden">
+        <div className="mobile-nav-overlay fixed inset-0 z-[80] isolate lg:hidden">
           <button
             type="button"
             aria-label="Close navigation overlay"
-            className="mobile-nav-backdrop absolute inset-0"
+            className="mobile-nav-backdrop fixed inset-0 z-0"
             onClick={() => setOpen(false)}
           />
 
           <div
             ref={mobileMenuRef}
-            className="mobile-nav-sheet absolute right-0 top-0 flex h-full w-[min(24rem,92vw)] flex-col px-5 pb-6 pt-6 sm:px-6"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile navigation"
+            className="mobile-nav-sheet fixed inset-y-0 right-0 z-10 flex h-full w-[min(24rem,92vw)] flex-col overflow-y-auto overscroll-contain px-5 pb-6 pt-6 sm:px-6"
           >
             <div className="flex items-start justify-between gap-4">
               <div>

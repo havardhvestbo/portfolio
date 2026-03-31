@@ -22,10 +22,33 @@ function getNextTheme(theme: ThemeChoice) {
 export function ThemeToggle() {
   const { resolvedTheme, setTheme, theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!mounted) {
+      return;
+    }
+
+    const syncMobileNavState = () => {
+      setMobileNavOpen(document.body.dataset.mobileNavOpen === "true");
+    };
+
+    syncMobileNavState();
+
+    const observer = new MutationObserver(syncMobileNavState);
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["data-mobile-nav-open"],
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [mounted]);
 
   if (!mounted) {
     return (
@@ -50,6 +73,7 @@ export function ThemeToggle() {
       <button
         type="button"
         onClick={() => setTheme(nextTheme)}
+        disabled={mobileNavOpen}
         aria-label={title}
         title={title}
         className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-border bg-surface text-copy shadow-[0_14px_32px_-18px_rgba(20,16,10,0.28)] backdrop-blur-sm hover:-translate-y-0.5 hover:border-primary hover:text-primary"
