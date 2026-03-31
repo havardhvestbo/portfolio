@@ -102,11 +102,7 @@ export default async function CVPage() {
             {education.map((edu) => (
               <div
                 key={exp.id}
-                className={`card p-6 ${
-                  isBouvet
-                    ? "!border-primary/30 !bg-primary/5 !shadow-[0_0_30px_-15px_rgba(250,204,21,0.3)] ring-1 ring-primary/20"
-                    : "card-hover"
-                }`}
+                className={`card card-hover p-6 ${isBouvet ? "card-featured" : ""}`}
               >
                 <div className="flex items-start justify-between">
                   <div>

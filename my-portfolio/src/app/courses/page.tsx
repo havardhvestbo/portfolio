@@ -27,6 +27,21 @@ const letterToPoints: Record<string, number> = {
   F: 0,
 };
 
+const positiveGrades = new Set(["A", "B", "PASSED", "PASS"]);
+
+const getGradeBadgeStyle = (grade?: string) => {
+  const isPositive = grade ? positiveGrades.has(grade.trim().toUpperCase()) : false;
+
+  return {
+    borderRadius: "9999px",
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
+    fontWeight: 600,
+    backgroundColor: isPositive ? "rgba(34,197,94,0.24)" : "rgba(250,204,21,0.18)",
+    color: isPositive ? "#4ade80" : "#facc15",
+    border: isPositive ? "1px solid rgba(74,222,128,0.28)" : "1px solid rgba(250,204,21,0.18)",
+  };
+};
+
 function calcWeightedAverageECTS(courses: Course[]) {
   let points = 0;
   let ects = 0;
@@ -141,7 +156,10 @@ export default async function CoursesPage() {
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-xs font-mono text-white/50">{course.code}</span>
                     {course.grade && (
-                      <span className="text-xs px-2 py-0.5 rounded bg-primary/20 text-primary">
+                      <span
+                        className="px-2 py-0.5 text-xs"
+                        style={getGradeBadgeStyle(course.grade)}
+                      >
                         {course.grade}
                       </span>
                     )}
@@ -175,7 +193,10 @@ export default async function CoursesPage() {
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-xs font-mono text-white/50">{course.code}</span>
                     {course.grade && (
-                      <span className="text-xs px-2 py-0.5 rounded bg-primary/20 text-primary">
+                      <span
+                        className="px-2 py-0.5 text-xs"
+                        style={getGradeBadgeStyle(course.grade)}
+                      >
                         {course.grade}
                       </span>
                     )}
