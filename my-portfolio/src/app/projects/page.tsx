@@ -32,83 +32,83 @@ export default async function ProjectsPage() {
 
   return (
     <PageTransition>
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">Projects</h1>
-        <p className="mt-2 text-muted">
-          A collection of my work and side projects.
-        </p>
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-3xl font-bold">Projects</h1>
+          <p className="mt-2 text-muted">
+            A collection of my work and side projects.
+          </p>
+        </div>
+
+        <StaggerContainer className="grid gap-6 md:grid-cols-2">
+          {projects.map((project) => (
+            <StaggerItem key={project.id}>
+              <article
+                className="group rounded-2xl border border-overlay-border p-6 hover:border-overlay-border-strong hover:shadow-[0_0_30px_-15px_var(--color-glow-strong)] transition h-full"
+              >
+                <div className="flex items-start justify-between">
+                  <h2 className="text-xl font-semibold group-hover:text-primary">
+                    {project.title}
+                  </h2>
+                  {project.year && (
+                    <span className="text-sm text-overlay-text-muted">{project.year}</span>
+                  )}
+                </div>
+
+                <p className="mt-3 text-muted">{project.description}</p>
+
+                {project.technologies && project.technologies.length > 0 && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {project.technologies.map((tech) => (
+                      <span
+                        key={tech}
+                        className="rounded-lg border border-overlay-border bg-overlay-bg px-2 py-1 text-xs"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {project.links && (
+                  <div className="mt-4 flex gap-3">
+                    {project.links.github && (
+                      <Link
+                        href={project.links.github}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-sm link-underline"
+                      >
+                        GitHub
+                      </Link>
+                    )}
+                    {project.links.demo && (
+                      <Link
+                        href={project.links.demo}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-sm link-underline"
+                      >
+                        Demo
+                      </Link>
+                    )}
+                    {project.links.website && (
+                      <Link
+                        href={project.links.website}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-sm link-underline"
+                      >
+                        Website
+                      </Link>
+                    )}
+                  </div>
+                )}
+              </article>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
       </div>
-
-      <StaggerContainer className="grid gap-6 md:grid-cols-2">
-        {projects.map((project) => (
-          <StaggerItem key={project.id}>
-          <article
-            className="group rounded-2xl border border-overlay-border p-6 hover:border-overlay-border-strong hover:shadow-[0_0_30px_-15px_var(--color-glow-strong)] transition h-full"
-          >
-            <div className="flex items-start justify-between">
-              <h2 className="text-xl font-semibold group-hover:text-primary">
-                {project.title}
-              </h2>
-              {project.year && (
-                <span className="text-sm text-overlay-text-muted">{project.year}</span>
-              )}
-            </div>
-
-            <p className="mt-3 text-muted">{project.description}</p>
-
-            {project.technologies && project.technologies.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-2">
-                {project.technologies.map((tech) => (
-                  <span
-                    key={tech}
-                    className="rounded-lg border border-overlay-border bg-overlay-bg px-2 py-1 text-xs"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {project.links && (
-              <div className="mt-4 flex gap-3">
-                {project.links.github && (
-                  <Link
-                    href={project.links.github}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-sm link-underline"
-                  >
-                    GitHub
-                  </Link>
-                )}
-                {project.links.demo && (
-                  <Link
-                    href={project.links.demo}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-sm link-underline"
-                  >
-                    Demo
-                  </Link>
-                )}
-                {project.links.website && (
-                  <Link
-                    href={project.links.website}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-sm link-underline"
-                  >
-                    Website
-                  </Link>
-                )}
-              </div>
-            )}
-          </article>
-          </StaggerItem>
-        ))}
-      </StaggerContainer>
-    </div>
     </PageTransition>
   );
 }

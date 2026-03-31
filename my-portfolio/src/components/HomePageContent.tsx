@@ -62,7 +62,7 @@ export function HomePageContent({ personalInfo, featuredProjects, experiences }:
 
   return (
     <div className="space-y-24">
-      <section className="relative min-h-[78vh] md:min-h-[86vh] grid md:grid-cols-[260px_1fr] items-start gap-10">
+      <section className="relative min-h-[78vh] md:min-h-[86vh] grid md:grid-cols-[260px_1fr] items-start gap-6 md:gap-10">
         <div className="pointer-events-none absolute inset-0 -z-10">
           <div className="absolute -top-24 -left-20 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
           <div className="absolute top-1/3 right-0 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
@@ -81,7 +81,7 @@ export function HomePageContent({ personalInfo, featuredProjects, experiences }:
             alt={personalInfo.imageAlt ?? "Portrait"}
             fill
             className="object-cover"
-            sizes="240px"
+            sizes="(min-width: 768px) 240px, 192px"
             priority
           />
         </motion.div>
@@ -146,7 +146,7 @@ export function HomePageContent({ personalInfo, featuredProjects, experiences }:
             transition={{ ...fadeUp.transition, delay: 0.28 }}
             className="mt-6 inline-flex items-center gap-2 rounded-lg border border-overlay-border bg-overlay-bg px-3 py-1.5 text-xs text-overlay-text"
           >
-            <span className="h-2 w-2 rounded-full bg-emerald-400" />
+            <span className="h-2 w-2 rounded-full bg-success" />
             Bouvet ASA — Frontend intern on a client project for Bane NOR (React + TS)
           </motion.div>
         </div>

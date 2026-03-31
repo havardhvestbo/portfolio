@@ -2,8 +2,8 @@ export default function Loading() {
   return (
     <div className="space-y-8 animate-pulse">
       <div>
-        <div className="h-9 w-48 rounded-lg bg-overlay-bg" />
-        <div className="mt-3 h-5 w-80 rounded-lg bg-overlay-bg" />
+        <div className="h-9 w-full max-w-48 rounded-lg bg-overlay-bg" />
+        <div className="mt-3 h-5 w-full max-w-80 rounded-lg bg-overlay-bg" />
       </div>
       <div className="grid gap-6 md:grid-cols-2">
         {Array.from({ length: 4 }).map((_, i) => (

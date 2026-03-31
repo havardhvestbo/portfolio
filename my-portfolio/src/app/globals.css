@@ -19,6 +19,7 @@
   --color-overlay-border-strong: rgba(0, 0, 0, 0.15);
   --color-glow: rgba(202, 138, 4, 0.12);
   --color-glow-strong: rgba(202, 138, 4, 0.2);
+  --color-success: #16a34a;
   --color-marquee-fade: #fafafa;
   --color-primary-contrast: #ffffff;
   --color-navbar-bg: rgba(250, 250, 250, 0.8);
@@ -43,6 +44,7 @@
   --color-overlay-border-strong: rgba(255, 255, 255, 0.18);
   --color-glow: rgba(250, 204, 21, 0.15);
   --color-glow-strong: rgba(250, 204, 21, 0.35);
+  --color-success: #4ade80;
   --color-marquee-fade: #141419;
   --color-primary-contrast: #1a1a2e;
   --color-navbar-bg: rgba(20, 20, 25, 0.8);
@@ -66,6 +68,7 @@
   --color-overlay-border-strong: var(--color-overlay-border-strong);
   --color-glow: var(--color-glow);
   --color-glow-strong: var(--color-glow-strong);
+  --color-success: var(--color-success);
   --color-marquee-fade: var(--color-marquee-fade);
   --color-primary-contrast: var(--color-primary-contrast);
   --color-navbar-bg: var(--color-navbar-bg);
@@ -110,19 +113,4 @@
 .marquee-track {
   animation: marquee 18s linear infinite;
   will-change: transform;
-}
-
-/* Nice background flourish for the hero */
-.hero-bg {
-  position: relative;
-}
-.hero-bg::before {
-  content: "";
-  position: absolute;
-  inset: -40px;
-  background: radial-gradient(600px 300px at 10% -10%, var(--color-glow), transparent 55%),
-              radial-gradient(700px 400px at 110% 10%, var(--color-glow), transparent 60%);
-  filter: blur(10px);
-  pointer-events: none;
-  z-index: 0;
 }
