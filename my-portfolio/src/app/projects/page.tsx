@@ -40,20 +40,20 @@ export default async function ProjectsPage() {
           </p>
         </div>
 
-        <StaggerContainer className="grid gap-6 md:grid-cols-2">
-          {projects.map((project) => (
-            <StaggerItem key={project.id}>
-              <article
-                className="group rounded-2xl border border-overlay-border p-6 hover:border-overlay-border-strong hover:shadow-[0_0_30px_-15px_var(--color-glow-strong)] transition h-full"
-              >
-                <div className="flex items-start justify-between">
-                  <h2 className="text-xl font-semibold group-hover:text-primary">
-                    {project.title}
-                  </h2>
-                  {project.year && (
-                    <span className="text-sm text-overlay-text-muted">{project.year}</span>
-                  )}
-                </div>
+      <div className="grid gap-6 md:grid-cols-2">
+        {projects.map((project) => (
+          <article
+            key={project.id}
+            className="card card-hover group p-6"
+          >
+            <div className="flex items-start justify-between">
+              <h2 className="text-xl font-semibold group-hover:text-primary">
+                {project.title}
+              </h2>
+              {project.year && (
+                <span className="text-sm text-white/50">{project.year}</span>
+              )}
+            </div>
 
                 <p className="mt-3 text-muted">{project.description}</p>
 

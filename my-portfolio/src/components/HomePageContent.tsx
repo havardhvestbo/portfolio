@@ -204,7 +204,7 @@ export function HomePageContent({ personalInfo, featuredProjects, experiences }:
             <motion.li
               key={highlight.id}
               variants={card}
-              className="rounded-2xl border border-overlay-border bg-overlay-bg p-5"
+              className="card p-5"
             >
               <span className="text-xs uppercase tracking-wide text-overlay-text-muted">
                 {highlight.kind}

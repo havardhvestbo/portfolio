@@ -49,15 +49,15 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        <section>
-          <h2 className="text-xl font-semibold">What I Value</h2>
-          <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-            <li className="rounded-xl border border-overlay-border p-4">Teamwork and knowledge sharing</li>
-            <li className="rounded-xl border border-overlay-border p-4">Clear, maintainable code</li>
-            <li className="rounded-xl border border-overlay-border p-4">User-first, accessible design</li>
-            <li className="rounded-xl border border-overlay-border p-4">Solving real problems, not just &quot;cool&quot; ones</li>
-          </ul>
-        </section>
+      <section>
+        <h3 className="text-xl font-semibold">What I Value</h3>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+          <li className=”card p-4”>Teamwork and knowledge sharing</li>
+          <li className=”card p-4”>Clear, maintainable code</li>
+          <li className=”card p-4”>User-first, accessible design</li>
+          <li className=”card p-4”>Solving real problems, not just “cool” ones</li>
+        </ul>
+      </section>
 
         <section>
           <h2 className="text-2xl font-semibold">Let&apos;s Connect</h2>

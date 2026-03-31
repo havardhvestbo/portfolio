@@ -86,24 +86,31 @@ export default async function CoursesPage() {
   const weightedAvg = calcWeightedAverageECTS(courses);
 
   return (
-    <PageTransition>
-      <div className="space-y-16">
-        <section>
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight">Courses</h1>
-          <p className="mt-3 text-overlay-text text-lg">
-            Academic coursework from my Bachelor&apos;s and Master&apos;s degree programs.
-          </p>
-        </section>
+    <div className="space-y-16">
+      <section>
+        <h1 className="text-4xl md:text-5xl font-bold leading-tight">Courses</h1>
+        <p className="mt-3 text-white/80 text-lg">
+          Academic coursework from my Bachelor&apos;s and Master&apos;s degree programs.
+        </p>
+      </section>
 
-        <section>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-2xl border border-overlay-border p-5">
-              <div className="text-2xl font-bold text-primary">{bachelorCourses.length}</div>
-              <div className="text-sm text-muted">Bachelor Courses</div>
-            </div>
-            <div className="rounded-2xl border border-overlay-border p-5">
-              <div className="text-2xl font-bold text-primary">{masterCourses.length}</div>
-              <div className="text-sm text-muted">Master Courses</div>
+      <section>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="card p-5">
+            <div className="text-2xl font-bold text-primary">{bachelorCourses.length}</div>
+            <div className="text-sm text-white/70">Bachelor Courses</div>
+          </div>
+          <div className="card p-5">
+            <div className="text-2xl font-bold text-primary">{masterCourses.length}</div>
+            <div className="text-sm text-white/70">Master Courses</div>
+          </div>
+          <div className="card p-5">
+            <div className="text-2xl font-bold text-primary">{totalECTS}</div>
+            <div className="text-sm text-white/70">Total ECTS</div>
+          </div>
+          <div className="card p-5">
+            <div className="text-2xl font-bold text-primary">
+              {weightedAvg ? weightedAvg.toFixed(2) : "—"}
             </div>
             <div className="rounded-2xl border border-overlay-border p-5">
               <div className="text-2xl font-bold text-primary">{totalECTS}</div>
@@ -118,32 +125,26 @@ export default async function CoursesPage() {
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section>
-          <h2 className="text-2xl font-semibold">Bachelor&apos;s Degree</h2>
-          <ul className="mt-6 grid gap-4 sm:grid-cols-2">
-            {bachelorCourses.map((course) => (
-              <li
-                key={course.id}
-                className="group rounded-2xl border border-overlay-border p-5 hover:border-overlay-border-strong hover:shadow-[0_0_30px_-15px_var(--color-glow-strong)] transition"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-mono text-overlay-text-muted">{course.code}</span>
-                      {course.grade && (
-                        <span className="text-xs px-2 py-0.5 rounded bg-primary/20 text-primary">
-                          {course.grade}
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="text-lg font-medium group-hover:text-primary">{course.title}</h3>
-                    <p className="text-sm text-primary">{course.institution}</p>
-                  </div>
-                  <div className="text-right text-sm text-muted">
-                    <div>{formatSemester(course.semester, course.year)}</div>
-                    <div>{formatCredits(course.credits)}</div>
+      <section>
+        <h2 className="text-2xl font-semibold">Bachelor&apos;s Degree</h2>
+        <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+          {bachelorCourses.map((course) => (
+            <li
+              key={course.id}
+              className="card card-hover group p-5"
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs font-mono text-white/50">{course.code}</span>
+                    {course.grade && (
+                      <span className="text-xs px-2 py-0.5 rounded bg-primary/20 text-primary">
+                        {course.grade}
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -151,40 +152,33 @@ export default async function CoursesPage() {
                   <p className="mt-2 text-sm text-muted">{course.description}</p>
                 )}
 
-                {course.topics && course.topics.length > 0 && (
-                  <div className="mt-3">
-                    <TechChips items={course.topics} max={6} />
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
-        </section>
+              {course.topics && course.topics.length > 0 && (
+                <div className="mt-3">
+                  <TechChips items={course.topics} max={6} />
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
 
-        <section>
-          <h2 className="text-2xl font-semibold">Master&apos;s Degree</h2>
-          <ul className="mt-6 grid gap-4 sm:grid-cols-2">
-            {masterCourses.map((course) => (
-              <li
-                key={course.id}
-                className="group rounded-2xl border border-overlay-border p-5 hover:border-overlay-border-strong hover:shadow-[0_0_30px_-15px_var(--color-glow-strong)] transition"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-mono text-overlay-text-muted">{course.code}</span>
-                      {course.grade && (
-                        <span className="text-xs px-2 py-0.5 rounded bg-primary/20 text-primary">
-                          {course.grade}
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="text-lg font-medium group-hover:text-primary">{course.title}</h3>
-                    <p className="text-sm text-primary">{course.institution}</p>
-                  </div>
-                  <div className="text-right text-sm text-muted">
-                    <div>{formatSemester(course.semester, course.year)}</div>
-                    <div>{formatCredits(course.credits)}</div>
+      <section>
+        <h2 className="text-2xl font-semibold">Master&apos;s Degree</h2>
+        <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+          {masterCourses.map((course) => (
+            <li
+              key={course.id}
+              className="card card-hover group p-5"
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs font-mono text-white/50">{course.code}</span>
+                    {course.grade && (
+                      <span className="text-xs px-2 py-0.5 rounded bg-primary/20 text-primary">
+                        {course.grade}
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -192,32 +186,31 @@ export default async function CoursesPage() {
                   <p className="mt-2 text-sm text-muted">{course.description}</p>
                 )}
 
-                {course.topics && course.topics.length > 0 && (
-                  <div className="mt-3">
-                    <TechChips items={course.topics} max={6} />
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
-        </section>
+              {course.topics && course.topics.length > 0 && (
+                <div className="mt-3">
+                  <TechChips items={course.topics} max={6} />
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
 
-        <section>
-          <h2 className="text-2xl font-semibold">By Category</h2>
-          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {Object.entries(coursesByCategory).map(([category, entries]) =>
-              entries && entries.length > 0 ? (
-                <div key={category} className="rounded-2xl border border-overlay-border p-5">
-                  <h3 className="text-lg font-medium capitalize mb-3">
-                    {category.replace(/([A-Z])/g, " $1").trim()}
-                  </h3>
-                  <div className="space-y-2">
-                    {entries.map((course) => (
-                      <div key={course.id} className="text-sm">
-                        <div className="font-medium">{course.title}</div>
-                        <div className="text-overlay-text-muted text-xs">
-                          {course.code} • {formatSemester(course.semester, course.year)}
-                        </div>
+      <section>
+        <h2 className="text-2xl font-semibold">By Category</h2>
+        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {Object.entries(coursesByCategory).map(([category, entries]) =>
+            entries && entries.length > 0 ? (
+              <div key={category} className="card p-5">
+                <h3 className="text-lg font-medium capitalize mb-3">
+                  {category.replace(/([A-Z])/g, " $1").trim()}
+                </h3>
+                <div className="space-y-2">
+                  {entries.map((course) => (
+                    <div key={course.id} className="text-sm">
+                      <div className="font-medium">{course.title}</div>
+                      <div className="text-white/50 text-xs">
+                        {course.code} • {formatSemester(course.semester, course.year)}
                       </div>
                     ))}
                   </div>

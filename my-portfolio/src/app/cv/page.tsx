@@ -101,8 +101,12 @@ export default async function CVPage() {
           <div className="space-y-6">
             {education.map((edu) => (
               <div
-                key={edu.id}
-                className="rounded-2xl border border-overlay-border p-6"
+                key={exp.id}
+                className={`card p-6 ${
+                  isBouvet
+                    ? "!border-primary/30 !bg-primary/5 !shadow-[0_0_30px_-15px_rgba(250,204,21,0.3)] ring-1 ring-primary/20"
+                    : "card-hover"
+                }`}
               >
                 <div className="flex items-start justify-between">
                   <div>
@@ -126,41 +130,62 @@ export default async function CVPage() {
           </div>
         </section>
 
-        <section>
-          <h2 className="text-2xl font-semibold mb-6">Skills</h2>
-          <div className="grid gap-6 md:grid-cols-2">
-            {Object.entries(groupedSkills).map(([category, categorySkills]) => (
-              <div
-                key={category}
-                className="rounded-2xl border border-overlay-border p-6"
-              >
-                <h3 className="text-lg font-semibold capitalize mb-3">
-                  {category.replace(/([A-Z])/g, " $1").trim()}
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {categorySkills.map((skill) => (
-                    <span
-                      key={skill.name}
-                      className="rounded-lg border border-overlay-border bg-overlay-bg px-3 py-1.5 text-sm"
-                    >
-                      {skill.name}
-                      {skill.level && (
-                        <span className="ml-1 text-xs text-overlay-text-muted">
-                          ({skill.level})
-                        </span>
-                      )}
-                    </span>
-                  ))}
+      <section>
+        <h2 className="text-2xl font-semibold mb-6">Education</h2>
+        <div className="space-y-6">
+          {education.map((edu) => (
+            <div
+              key={edu.id}
+              className="card p-6"
+            >
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-xl font-semibold">{edu.degree}</h3>
+                  <p className="text-primary">{edu.institution}</p>
                 </div>
               </div>
             ))}
 
-            {skills.length === 0 && (
-              <p className="text-muted">Skill data is unavailable right now.</p>
-            )}
-          </div>
-        </section>
-      </div>
-    </PageTransition>
+          {education.length === 0 && (
+            <p className="text-white/60">Education data is unavailable right now.</p>
+          )}
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-2xl font-semibold mb-6">Skills</h2>
+        <div className="grid gap-6 md:grid-cols-2">
+          {Object.entries(groupedSkills).map(([category, categorySkills]) => (
+            <div
+              key={category}
+              className="card p-6"
+            >
+              <h3 className="text-lg font-semibold capitalize mb-3">
+                {category.replace(/([A-Z])/g, " $1").trim()}
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {categorySkills.map((skill) => (
+                  <span
+                    key={skill.name}
+                    className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm"
+                  >
+                    {skill.name}
+                    {skill.level && (
+                      <span className="ml-1 text-xs text-white/50">
+                        ({skill.level})
+                      </span>
+                    )}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+
+          {skills.length === 0 && (
+            <p className="text-white/60">Skill data is unavailable right now.</p>
+          )}
+        </div>
+      </section>
+    </div>
   );
 }
