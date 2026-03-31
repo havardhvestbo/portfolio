@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ProfileFrame } from "@/components/ProfileFrame";
-import { TechMarquee } from "@/components/TechMarquee";
 import { fadeUpVariants, fadeUpTransition, scaleInVariants } from "@/lib/animations";
 import type { PersonalInfo } from "@/types/portfolio";
 
@@ -19,7 +18,7 @@ export function HeroSection({ personalInfo }: HeroSectionProps) {
       className="hero-diagonals relative flex min-h-[calc(100svh-4rem)] items-center overflow-hidden pt-3 md:pt-5"
       id="top"
     >
-      <div className="hero-layout mx-auto grid w-full max-w-[1440px] items-center gap-14 px-6 pb-28 lg:grid-cols-[minmax(0,0.66fr)_minmax(340px,0.34fr)] lg:px-20 2xl:max-w-[1560px]">
+      <div className="hero-layout mx-auto grid w-full max-w-[1440px] items-center gap-14 px-6 pb-24 lg:grid-cols-[minmax(0,0.66fr)_minmax(340px,0.34fr)] lg:px-20 2xl:max-w-[1560px]">
         <div className="max-w-[46rem]">
           <motion.div
             variants={fadeUpVariants}
@@ -110,15 +109,11 @@ export function HeroSection({ personalInfo }: HeroSectionProps) {
       <a
         href="#about"
         aria-label="Scroll to About section"
-        className="hero-scroll-indicator absolute bottom-20 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-[11px] uppercase tracking-[0.1em] text-muted"
+        className="hero-scroll-indicator absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-[11px] uppercase tracking-[0.1em] text-muted"
       >
         <span>Scroll</span>
         <span className="h-8 w-px bg-[linear-gradient(180deg,var(--text-muted),transparent)]" />
       </a>
-
-      <div className="absolute inset-x-0 bottom-0 z-10 border-t border-border-light bg-background/90 backdrop-blur-sm">
-        <TechMarquee items={personalInfo.technologies} className="mx-auto max-w-[1560px] px-4 lg:px-10" />
-      </div>
     </section>
   );
 }
