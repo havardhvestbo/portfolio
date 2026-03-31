@@ -144,7 +144,7 @@ body {
   opacity: 0.03;
 }
 
-.grain-shell > * {
+.grain-shell > :not(header):not(.floating-theme-toggle) {
   position: relative;
   z-index: 1;
 }

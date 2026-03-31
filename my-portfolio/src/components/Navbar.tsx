@@ -72,7 +72,9 @@ function DrawerNavigationLink({
 export function Navbar({ navLinks, social }: NavbarProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const lastScrollYRef = useRef(0);
 
   const primaryLinks = useMemo(
     () => navLinks.filter((link) => link.group === "primary"),
@@ -109,12 +111,58 @@ export function Navbar({ navLinks, social }: NavbarProps) {
     };
   }, [open]);
 
+  useEffect(() => {
+    lastScrollYRef.current = window.scrollY;
+    let ticking = false;
+
+    const updateVisibility = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY <= 24) {
+        setIsVisible(true);
+      } else if (currentScrollY < lastScrollYRef.current) {
+        setIsVisible(true);
+      } else if (currentScrollY > lastScrollYRef.current) {
+        setIsVisible(false);
+      }
+
+      lastScrollYRef.current = currentScrollY;
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (ticking) {
+        return;
+      }
+
+      ticking = true;
+      window.requestAnimationFrame(updateVisibility);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (open) {
+      setIsVisible(true);
+    }
+  }, [open]);
+
   const github = social.github;
   const linkedin = social.linkedin;
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-border-light/80 bg-[var(--navbar-bg)] backdrop-blur-md">
+      <header
+        className={[
+          "fixed inset-x-0 top-0 z-50 border-b border-border-light/80 bg-[var(--navbar-bg)] backdrop-blur-md transition-transform duration-300 ease-out will-change-transform",
+          isVisible ? "translate-y-0" : "-translate-y-full",
+        ].join(" ")}
+      >
         <div className="editorial-container flex h-16 items-center justify-between gap-6">
           <Link href="/" className="flex shrink-0 items-center gap-1 font-serif text-xl font-semibold tracking-[-0.02em] text-foreground">
             <span>Håvard</span>
