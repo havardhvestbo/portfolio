@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ProfileFrame } from "@/components/ProfileFrame";
-import { fadeUpVariants, fadeUpTransition, scaleInVariants } from "@/lib/animations";
-import type { PersonalInfo } from "@/types/portfolio";
+import { ProfileFrame } from "@/shared/ui/ProfileFrame";
+import { fadeUpVariants, fadeUpTransition, scaleInVariants } from "@/shared/lib/animations";
+import type { PersonalInfo } from "@/entities/portfolio/model/portfolio";
 
 type HeroSectionProps = {
   personalInfo: PersonalInfo;

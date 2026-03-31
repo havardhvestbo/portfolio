@@ -1,5 +1,5 @@
-import { CardSurface } from "@/components/CardSurface";
-import { TechPill } from "@/components/ui/TechPill";
+import { CardSurface } from "@/shared/ui/CardSurface";
+import { TechPill } from "@/shared/ui/TechPill";
 
 type TimelineEntryProps = {
   period: string;

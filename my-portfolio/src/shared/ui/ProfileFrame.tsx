@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { editorialBounce } from "@/lib/animations";
+import { editorialBounce } from "@/shared/lib/animations";
 
 type ProfileFrameProps = {
   image?: string;

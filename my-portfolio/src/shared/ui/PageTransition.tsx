@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { editorialEase } from "@/lib/animations";
+import { editorialEase } from "@/shared/lib/animations";
 
 export function PageTransition({ children }: { children: React.ReactNode }) {
   return (

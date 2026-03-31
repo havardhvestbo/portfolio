@@ -1,10 +1,10 @@
-import { AboutSection } from "@/components/AboutSection";
-import { ContactSection } from "@/components/ContactSection";
-import { ExperienceSection } from "@/components/ExperienceSection";
-import { HeroSection } from "@/components/HeroSection";
-import { ProjectsSection } from "@/components/ProjectsSection";
-import { TechMarquee } from "@/components/TechMarquee";
-import { getPortfolioSnapshot } from "@/lib/api";
+import { getPortfolioSnapshot } from "@/entities/portfolio/api/portfolio-api";
+import { AboutSection } from "@/widgets/home/ui/AboutSection";
+import { ContactSection } from "@/widgets/home/ui/ContactSection";
+import { ExperienceSection } from "@/widgets/home/ui/ExperienceSection";
+import { HeroSection } from "@/widgets/home/ui/HeroSection";
+import { ProjectsSection } from "@/widgets/home/ui/ProjectsSection";
+import { TechMarquee } from "@/widgets/home/ui/TechMarquee";
 
 export default async function HomePage() {
   const snapshot = await getPortfolioSnapshot();

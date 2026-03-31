@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { CardSurface } from "@/components/CardSurface";
-import { PageTransition, StaggerContainer, StaggerItem } from "@/components/PageTransition";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { getPersonalInfo } from "@/lib/api";
+import { getPersonalInfo } from "@/entities/portfolio/api/portfolio-api";
+import { CardSurface } from "@/shared/ui/CardSurface";
+import { PageTransition, StaggerContainer, StaggerItem } from "@/shared/ui/PageTransition";
+import { SectionHeading } from "@/shared/ui/SectionHeading";
 
 export const metadata: Metadata = {
   title: "About",

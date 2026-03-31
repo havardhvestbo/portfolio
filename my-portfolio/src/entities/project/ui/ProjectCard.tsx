@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { CardSurface } from "@/components/CardSurface";
-import { TechPill } from "@/components/ui/TechPill";
-import type { Project } from "@/types/portfolio";
+import { CardSurface } from "@/shared/ui/CardSurface";
+import { TechPill } from "@/shared/ui/TechPill";
+import type { Project } from "@/entities/portfolio/model/portfolio";
 
 type ProjectCardProps = {
   project: Project;

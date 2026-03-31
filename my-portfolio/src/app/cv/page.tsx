@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { CardSurface } from "@/components/CardSurface";
-import { PageTransition } from "@/components/PageTransition";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { TechPill } from "@/components/ui/TechPill";
-import { TimelineEntry } from "@/components/ui/TimelineEntry";
-import { getEducation, getExperiences, getSkills } from "@/lib/api";
-import type { Education, Skill } from "@/types/portfolio";
+import { getEducation, getExperiences, getSkills } from "@/entities/portfolio/api/portfolio-api";
+import type { Education, Skill } from "@/entities/portfolio/model/portfolio";
+import { TimelineEntry } from "@/entities/experience/ui/TimelineEntry";
+import { CardSurface } from "@/shared/ui/CardSurface";
+import { PageTransition } from "@/shared/ui/PageTransition";
+import { SectionHeading } from "@/shared/ui/SectionHeading";
+import { TechPill } from "@/shared/ui/TechPill";
 
 export const metadata: Metadata = {
   title: "CV",

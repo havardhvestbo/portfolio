@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { TimelineEntry } from "@/components/ui/TimelineEntry";
-import { fadeUpVariants, revealViewport, timelineContainer } from "@/lib/animations";
-import type { Experience } from "@/types/portfolio";
+import { SectionHeading } from "@/shared/ui/SectionHeading";
+import { TimelineEntry } from "@/entities/experience/ui/TimelineEntry";
+import { fadeUpVariants, revealViewport, timelineContainer } from "@/shared/lib/animations";
+import type { Experience } from "@/entities/portfolio/model/portfolio";
 
 type ExperienceSectionProps = {
   experiences: Experience[];

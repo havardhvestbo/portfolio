@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { PageTransition, StaggerContainer, StaggerItem } from "@/components/PageTransition";
-import { ProjectCard } from "@/components/ui/ProjectCard";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { getProjects } from "@/lib/api";
+import { getProjects } from "@/entities/portfolio/api/portfolio-api";
+import { ProjectCard } from "@/entities/project/ui/ProjectCard";
+import { PageTransition, StaggerContainer, StaggerItem } from "@/shared/ui/PageTransition";
+import { SectionHeading } from "@/shared/ui/SectionHeading";
 
 export const metadata: Metadata = {
   title: "Projects",

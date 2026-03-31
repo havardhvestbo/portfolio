@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { fadeUpVariants, revealViewport } from "@/lib/animations";
-import type { PersonalInfo } from "@/types/portfolio";
+import { SectionHeading } from "@/shared/ui/SectionHeading";
+import { fadeUpVariants, revealViewport } from "@/shared/lib/animations";
+import type { PersonalInfo } from "@/entities/portfolio/model/portfolio";
 
 type AboutSectionProps = {
   personalInfo: PersonalInfo;

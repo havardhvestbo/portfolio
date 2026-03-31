@@ -34,9 +34,10 @@ portfolio/
 ├── my-portfolio/                    # Next.js 15 frontend application
 │   ├── src/
 │   │   ├── app/                     # Next.js app router pages
-│   │   ├── components/              # Reusable React components
-│   │   ├── lib/                     # API helpers for backend communication
-│   │   └── types/                   # Shared TypeScript contracts
+│   │   ├── entities/                # Domain models and API clients
+│   │   ├── features/                # Isolated user-facing behavior
+│   │   ├── shared/                  # Shared UI and utilities
+│   │   └── widgets/                 # Page-level composition blocks
 │   ├── public/                      # Static assets
 │   └── .env.example                 # Sample environment variables
 └── README.md                        # This file
@@ -105,12 +106,14 @@ The site URL returned from the backend is configured via `Portfolio:SiteUrl` in 
 **Backend**
 - `dotnet run` (from `backend/`) – Start the ASP.NET Core API
 - `dotnet build` – Compile the backend project
+- `dotnet test backend/tests/Portfolio.Api.Tests/Portfolio.Api.Tests.csproj` – Run backend xUnit tests
 
 **Frontend**
 - `npm run dev` – Start the Next.js dev server with Turbopack
 - `npm run build` – Create a production build
 - `npm run start` – Launch the production server
 - `npm run lint` – Run ESLint for code quality
+- `npm test` – Run frontend Vitest tests
 
 ## 🔌 API Endpoints
 

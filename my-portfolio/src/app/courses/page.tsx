@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { CardSurface } from "@/components/CardSurface";
-import { PageTransition } from "@/components/PageTransition";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { TechPill } from "@/components/ui/TechPill";
-import { getCourses } from "@/lib/api";
-import type { Course, CourseCategory, CourseLevel, CourseSemester } from "@/types/portfolio";
+import { getCourses } from "@/entities/portfolio/api/portfolio-api";
+import type { Course, CourseCategory, CourseLevel, CourseSemester } from "@/entities/portfolio/model/portfolio";
+import { CardSurface } from "@/shared/ui/CardSurface";
+import { PageTransition } from "@/shared/ui/PageTransition";
+import { SectionHeading } from "@/shared/ui/SectionHeading";
+import { TechPill } from "@/shared/ui/TechPill";
 
 export const metadata: Metadata = {
   title: "Courses",

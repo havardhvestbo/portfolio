@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { ProjectCard } from "@/components/ui/ProjectCard";
-import { fadeUpVariants, revealViewport, staggerContainer } from "@/lib/animations";
-import type { Project } from "@/types/portfolio";
+import { SectionHeading } from "@/shared/ui/SectionHeading";
+import { ProjectCard } from "@/entities/project/ui/ProjectCard";
+import { fadeUpVariants, revealViewport, staggerContainer } from "@/shared/lib/animations";
+import type { Project } from "@/entities/portfolio/model/portfolio";
 
 type ProjectsSectionProps = {
   projects: Project[];

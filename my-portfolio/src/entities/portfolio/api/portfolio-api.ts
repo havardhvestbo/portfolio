@@ -8,7 +8,7 @@ import type {
   Project,
   SiteConfig,
   Skill
-} from "@/types/portfolio";
+} from "@/entities/portfolio/model/portfolio";
 
 const DEFAULT_LOCAL_API_BASE_URL = "http://localhost:5000";
 const DEFAULT_REVALIDATE_SECONDS = 1800;

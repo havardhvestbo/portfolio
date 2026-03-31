@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
-import type { NavLink as NavItem, SocialLink } from "@/types/portfolio";
+import type { NavLink as NavItem, SocialLink } from "@/entities/portfolio/model/portfolio";
 
 type NavbarProps = {
   navLinks: NavItem[];

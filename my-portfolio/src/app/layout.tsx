@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { DM_Sans, JetBrains_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { getNavigation, getPersonalInfo, getSiteConfig } from "@/lib/api";
-import { Footer } from "@/components/Footer";
-import { Navbar } from "@/components/Navbar";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import type { NavLink, SocialLink } from "@/types/portfolio";
+import { ThemeProvider } from "@/app/providers/ThemeProvider";
+import { getNavigation, getPersonalInfo, getSiteConfig } from "@/entities/portfolio/api/portfolio-api";
+import type { NavLink, SocialLink } from "@/entities/portfolio/model/portfolio";
+import { ThemeToggle } from "@/features/theme-toggle/ui/ThemeToggle";
+import { Footer } from "@/widgets/footer/ui/Footer";
+import { Navbar } from "@/widgets/navigation/ui/Navbar";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
