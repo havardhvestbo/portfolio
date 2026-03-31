@@ -22,7 +22,7 @@ export function TechChips({
       {visible.map((tech) => (
         <span
           key={tech}
-          className="inline-flex items-center rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-xs"
+          className="inline-flex items-center rounded-lg border border-overlay-border bg-overlay-bg px-2 py-1 text-xs"
         >
           {tech}
         </span>
@@ -32,7 +32,7 @@ export function TechChips({
         <button
           type="button"
           onClick={() => setExpanded(true)}
-          className="text-xs rounded-lg border border-white/10 bg-white/5 px-2 py-1 hover:border-white/20"
+          className="text-xs rounded-lg border border-overlay-border bg-overlay-bg px-2 py-1 hover:border-overlay-border-strong"
         >
           +{hiddenCount} more
         </button>

@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import { getPersonalInfo } from "@/lib/api";
+import { PageTransition } from "@/components/PageTransition";
 import type { PersonalInfo } from "@/types/portfolio";
+
+export const metadata: Metadata = {
+  title: "About",
+  description: "Learn more about Håvard — background, values, and how to get in touch.",
+};
 
 export default async function AboutPage() {
   let personalInfo: PersonalInfo | null = null;
@@ -11,10 +18,11 @@ export default async function AboutPage() {
   }
 
   return (
+    <PageTransition>
     <div className="space-y-16">
       <section>
         <h2 className="text-2xl font-semibold">About Me</h2>
-        <div className="mt-6 space-y-4 text-white/80 text-lg leading-relaxed">
+        <div className="mt-6 space-y-4 text-overlay-text text-lg leading-relaxed">
           <p>
             I’m {personalInfo?.name ?? "a Norwegian engineering student"}, originally from Varhaug just south of Stavanger,
             and currently pursuing an MSc in Management of Technology after a BSc in Computer Engineering.
@@ -44,10 +52,10 @@ export default async function AboutPage() {
       <section>
         <h3 className="text-xl font-semibold">What I Value</h3>
         <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-          <li className="rounded-xl border border-white/10 p-4">Teamwork and knowledge sharing</li>
-          <li className="rounded-xl border border-white/10 p-4">Clear, maintainable code</li>
-          <li className="rounded-xl border border-white/10 p-4">User-first, accessible design</li>
-          <li className="rounded-xl border border-white/10 p-4">Solving real problems, not just “cool” ones</li>
+          <li className="rounded-xl border border-overlay-border p-4">Teamwork and knowledge sharing</li>
+          <li className="rounded-xl border border-overlay-border p-4">Clear, maintainable code</li>
+          <li className="rounded-xl border border-overlay-border p-4">User-first, accessible design</li>
+          <li className="rounded-xl border border-overlay-border p-4">Solving real problems, not just “cool” ones</li>
         </ul>
       </section>
 
@@ -59,7 +67,7 @@ export default async function AboutPage() {
               href={personalInfo.social.github.url}
               target="_blank"
               rel="noreferrer"
-              className="px-5 py-2.5 rounded-xl border border-white/15 hover:bg-white/5 font-medium transition"
+              className="px-5 py-2.5 rounded-xl border border-overlay-border-strong hover:bg-overlay-bg-hover font-medium transition"
             >
               GitHub
             </a>
@@ -69,19 +77,20 @@ export default async function AboutPage() {
               href={personalInfo.social.linkedin.url}
               target="_blank"
               rel="noreferrer"
-              className="px-5 py-2.5 rounded-xl border border-white/15 hover:bg-white/5 font-medium transition"
+              className="px-5 py-2.5 rounded-xl border border-overlay-border-strong hover:bg-overlay-bg-hover font-medium transition"
             >
               LinkedIn
             </a>
           )}
           <a
             href="mailto:havardvestbo@icloud.com"
-            className="px-5 py-2.5 rounded-xl bg-primary text-black font-medium hover:opacity-90 transition"
+            className="px-5 py-2.5 rounded-xl bg-primary text-primary-contrast font-medium hover:opacity-90 transition"
           >
             Email me
           </a>
         </div>
       </section>
     </div>
+    </PageTransition>
   );
 }

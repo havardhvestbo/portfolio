@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaGithub, FaLinkedin, FaBars, FaTimes } from "react-icons/fa";
+import { ThemeToggle } from "./ThemeToggle";
 import type { NavLink as NavItem, SocialLink } from "@/types/portfolio";
 
 type NavbarProps = {
@@ -23,7 +24,7 @@ function NavLink({ href, label, onClick }: LinkProps) {
     <Link
       href={href}
       onClick={onClick}
-      className={`px-3 py-2 rounded-lg transition hover:bg-white/5 block ${active ? "bg-white/10" : ""}`}
+      className={`px-3 py-2 rounded-lg transition hover:bg-overlay-bg-hover block ${active ? "bg-overlay-bg" : ""}`}
     >
       {label}
     </Link>
@@ -32,12 +33,26 @@ function NavLink({ href, label, onClick }: LinkProps) {
 
 export function Navbar({ navLinks, social }: NavbarProps) {
   const [open, setOpen] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const firstLink = mobileMenuRef.current?.querySelector("a");
+    firstLink?.focus();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
 
   const github = social?.github;
   const linkedin = social?.linkedin;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 backdrop-blur bg-background/80">
+    <header className="sticky top-0 z-50 border-b border-overlay-border backdrop-blur bg-navbar-bg">
       <div className="container-page flex items-center justify-between py-3">
         <Link href="/" className="flex items-center gap-2">
           <div className="h-3 w-3 rounded-full bg-primary" />
@@ -51,6 +66,8 @@ export function Navbar({ navLinks, social }: NavbarProps) {
         </nav>
 
         <div className="flex items-center gap-3">
+          <ThemeToggle />
+
           <div className="flex items-center gap-3 text-lg">
             {github && (
               <Link
@@ -87,7 +104,7 @@ export function Navbar({ navLinks, social }: NavbarProps) {
       </div>
 
       {open && (
-        <div className="sm:hidden border-t border-white/10 bg-background/95 px-4 py-3 space-y-2">
+        <div ref={mobileMenuRef} className="sm:hidden border-t border-overlay-border bg-navbar-bg px-4 py-3 space-y-2">
           {navLinks.map((link) => (
             <NavLink key={link.href} {...link} onClick={() => setOpen(false)} />
           ))}

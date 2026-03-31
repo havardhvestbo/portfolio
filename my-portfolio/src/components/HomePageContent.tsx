@@ -65,7 +65,7 @@ export function HomePageContent({ personalInfo, featuredProjects, experiences }:
       <section className="relative min-h-[78vh] md:min-h-[86vh] grid md:grid-cols-[260px_1fr] items-start gap-10">
         <div className="pointer-events-none absolute inset-0 -z-10">
           <div className="absolute -top-24 -left-20 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
-          <div className="absolute top-1/3 right-0 h-96 w-96 rounded-full bg-amber-400/10 blur-3xl" />
+          <div className="absolute top-1/3 right-0 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
           <div className="absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
         </div>
 
@@ -74,7 +74,7 @@ export function HomePageContent({ personalInfo, featuredProjects, experiences }:
           initial={{ y: 0 }}
           animate={{ y: [0, -6, 0] }}
           transition={{ duration: 5, repeat: Infinity }}
-          className="order-1 md:order-1 relative h-48 w-48 md:h-60 md:w-60 overflow-hidden rounded-2xl ring-2 ring-primary/60 shadow-[0_0_50px_-12px_rgba(250,204,21,0.35)] self-start mx-auto md:mx-0"
+          className="order-1 md:order-1 relative h-48 w-48 md:h-60 md:w-60 overflow-hidden rounded-2xl ring-2 ring-primary/60 shadow-[0_0_50px_-12px_var(--color-glow-strong)] self-start mx-auto md:mx-0"
         >
           <Image
             src={personalInfo.image ?? "/me.jpeg"}
@@ -90,7 +90,7 @@ export function HomePageContent({ personalInfo, featuredProjects, experiences }:
           {personalInfo.status && (
             <motion.span
               {...fadeUp}
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs"
+              className="inline-flex items-center gap-2 rounded-full border border-overlay-border bg-overlay-bg px-3 py-1 text-xs"
             >
               <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
               {personalInfo.status}
@@ -108,7 +108,7 @@ export function HomePageContent({ personalInfo, featuredProjects, experiences }:
           <motion.p
             {...fadeUp}
             transition={{ ...fadeUp.transition, delay: 0.12 }}
-            className="mt-4 max-w-2xl text-white/80 text-xl md:text-2xl"
+            className="mt-4 max-w-2xl text-overlay-text text-xl md:text-2xl"
           >
             {personalInfo.description}
           </motion.p>
@@ -120,21 +120,21 @@ export function HomePageContent({ personalInfo, featuredProjects, experiences }:
           >
             <Link
               href="/projects"
-              className="px-6 py-3 rounded-xl bg-primary text-black font-semibold hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 inline-flex items-center gap-2"
+              className="px-6 py-3 rounded-xl bg-primary text-primary-contrast font-semibold hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 inline-flex items-center gap-2"
             >
               <FolderGit2 className="h-4 w-4" />
               View projects
             </Link>
             <Link
               href="/cv"
-              className="px-6 py-3 rounded-xl border border-white/15 hover:bg-white/5 font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 inline-flex items-center gap-2"
+              className="px-6 py-3 rounded-xl border border-overlay-border-strong hover:bg-overlay-bg-hover font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 inline-flex items-center gap-2"
             >
               <FileText className="h-4 w-4" />
               View CV
             </Link>
             <Link
               href="mailto:havardvestbo@icloud.com"
-              className="px-6 py-3 rounded-xl border border-white/15 hover:bg-white/5 font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 inline-flex items-center gap-2"
+              className="px-6 py-3 rounded-xl border border-overlay-border-strong hover:bg-overlay-bg-hover font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 inline-flex items-center gap-2"
             >
               <Mail className="h-4 w-4" />
               Contact
@@ -144,7 +144,7 @@ export function HomePageContent({ personalInfo, featuredProjects, experiences }:
           <motion.div
             {...fadeUp}
             transition={{ ...fadeUp.transition, delay: 0.28 }}
-            className="mt-6 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-white/80"
+            className="mt-6 inline-flex items-center gap-2 rounded-lg border border-overlay-border bg-overlay-bg px-3 py-1.5 text-xs text-overlay-text"
           >
             <span className="h-2 w-2 rounded-full bg-emerald-400" />
             Bouvet ASA — Frontend intern on a client project for Bane NOR (React + TS)
@@ -153,6 +153,7 @@ export function HomePageContent({ personalInfo, featuredProjects, experiences }:
 
         <a
           href="#tech"
+          aria-label="Scroll to tech stack"
           className="absolute left-1/2 -translate-x-1/2 bottom-6 opacity-70 hover:opacity-100 text-xs tracking-wide"
         >
           <motion.div
@@ -162,7 +163,7 @@ export function HomePageContent({ personalInfo, featuredProjects, experiences }:
             className="flex flex-col items-center gap-1"
           >
             <span className="block">Scroll</span>
-            <span className="h-5 w-px bg-white/50 animate-pulse" />
+            <span className="h-5 w-px bg-overlay-text-muted animate-pulse" />
           </motion.div>
         </a>
       </section>
@@ -203,15 +204,15 @@ export function HomePageContent({ personalInfo, featuredProjects, experiences }:
             <motion.li
               key={highlight.id}
               variants={card}
-              className="rounded-2xl border border-white/10 bg-white/[0.04] p-5"
+              className="rounded-2xl border border-overlay-border bg-overlay-bg p-5"
             >
-              <span className="text-xs uppercase tracking-wide text-white/50">
+              <span className="text-xs uppercase tracking-wide text-overlay-text-muted">
                 {highlight.kind}
               </span>
-              <h3 className="mt-1 text-lg font-semibold text-white">
+              <h3 className="mt-1 text-lg font-semibold text-foreground">
                 {highlight.title}
               </h3>
-              <p className="mt-2 text-white/70 text-sm leading-relaxed">
+              <p className="mt-2 text-muted text-sm leading-relaxed">
                 {highlight.description}
               </p>
             </motion.li>

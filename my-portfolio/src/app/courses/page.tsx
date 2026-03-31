@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import { TechChips } from "@/components/TechChips";
 import { getCourses } from "@/lib/api";
+import { PageTransition } from "@/components/PageTransition";
 import type { Course, CourseCategory, CourseLevel, CourseSemester } from "@/types/portfolio";
+
+export const metadata: Metadata = {
+  title: "Courses",
+  description: "Academic coursework from Håvard's Bachelor's and Master's degrees.",
+};
 
 type CoursesByCategory = Partial<Record<CourseCategory, Course[]>>;
 
@@ -62,9 +69,12 @@ export default async function CoursesPage() {
 
   if (courses.length === 0) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 text-center py-20">
         <h1 className="text-3xl font-bold">Courses</h1>
-        <p className="text-white/70">Course information is unavailable at the moment.</p>
+        <p className="text-muted">Course information is unavailable at the moment.</p>
+        <a href="/courses" className="inline-block mt-2 px-5 py-2.5 rounded-xl bg-primary text-primary-contrast font-medium hover:opacity-90 transition">
+          Try again
+        </a>
       </div>
     );
   }
@@ -76,33 +86,34 @@ export default async function CoursesPage() {
   const weightedAvg = calcWeightedAverageECTS(courses);
 
   return (
+    <PageTransition>
     <div className="space-y-16">
       <section>
         <h1 className="text-4xl md:text-5xl font-bold leading-tight">Courses</h1>
-        <p className="mt-3 text-white/80 text-lg">
+        <p className="mt-3 text-overlay-text text-lg">
           Academic coursework from my Bachelor&apos;s and Master&apos;s degree programs.
         </p>
       </section>
 
       <section>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-2xl border border-white/10 p-5">
+          <div className="rounded-2xl border border-overlay-border p-5">
             <div className="text-2xl font-bold text-primary">{bachelorCourses.length}</div>
-            <div className="text-sm text-white/70">Bachelor Courses</div>
+            <div className="text-sm text-muted">Bachelor Courses</div>
           </div>
-          <div className="rounded-2xl border border-white/10 p-5">
+          <div className="rounded-2xl border border-overlay-border p-5">
             <div className="text-2xl font-bold text-primary">{masterCourses.length}</div>
-            <div className="text-sm text-white/70">Master Courses</div>
+            <div className="text-sm text-muted">Master Courses</div>
           </div>
-          <div className="rounded-2xl border border-white/10 p-5">
+          <div className="rounded-2xl border border-overlay-border p-5">
             <div className="text-2xl font-bold text-primary">{totalECTS}</div>
-            <div className="text-sm text-white/70">Total ECTS</div>
+            <div className="text-sm text-muted">Total ECTS</div>
           </div>
-          <div className="rounded-2xl border border-white/10 p-5">
+          <div className="rounded-2xl border border-overlay-border p-5">
             <div className="text-2xl font-bold text-primary">
               {weightedAvg ? weightedAvg.toFixed(2) : "—"}
             </div>
-            <div className="text-sm text-white/70">
+            <div className="text-sm text-muted">
               ECTS‑weighted average (A=5…F=0)
             </div>
           </div>
@@ -115,12 +126,12 @@ export default async function CoursesPage() {
           {bachelorCourses.map((course) => (
             <li
               key={course.id}
-              className="group rounded-2xl border border-white/10 p-5 hover:border-white/20 hover:shadow-[0_0_30px_-15px_rgba(250,204,21,0.45)] transition"
+              className="group rounded-2xl border border-overlay-border p-5 hover:border-overlay-border-strong hover:shadow-[0_0_30px_-15px_var(--color-glow-strong)] transition"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-mono text-white/50">{course.code}</span>
+                    <span className="text-xs font-mono text-overlay-text-muted">{course.code}</span>
                     {course.grade && (
                       <span className="text-xs px-2 py-0.5 rounded bg-primary/20 text-primary">
                         {course.grade}
@@ -130,14 +141,14 @@ export default async function CoursesPage() {
                   <h3 className="text-lg font-medium group-hover:text-primary">{course.title}</h3>
                   <p className="text-sm text-primary">{course.institution}</p>
                 </div>
-                <div className="text-right text-sm text-white/70">
+                <div className="text-right text-sm text-muted">
                   <div>{formatSemester(course.semester, course.year)}</div>
                   <div>{formatCredits(course.credits)}</div>
                 </div>
               </div>
 
               {course.description && (
-                <p className="mt-2 text-sm text-white/70">{course.description}</p>
+                <p className="mt-2 text-sm text-muted">{course.description}</p>
               )}
 
               {course.topics && course.topics.length > 0 && (
@@ -156,12 +167,12 @@ export default async function CoursesPage() {
           {masterCourses.map((course) => (
             <li
               key={course.id}
-              className="group rounded-2xl border border-white/10 p-5 hover:border-white/20 hover:shadow-[0_0_30px_-15px_rgba(250,204,21,0.45)] transition"
+              className="group rounded-2xl border border-overlay-border p-5 hover:border-overlay-border-strong hover:shadow-[0_0_30px_-15px_var(--color-glow-strong)] transition"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-mono text-white/50">{course.code}</span>
+                    <span className="text-xs font-mono text-overlay-text-muted">{course.code}</span>
                     {course.grade && (
                       <span className="text-xs px-2 py-0.5 rounded bg-primary/20 text-primary">
                         {course.grade}
@@ -171,14 +182,14 @@ export default async function CoursesPage() {
                   <h3 className="text-lg font-medium group-hover:text-primary">{course.title}</h3>
                   <p className="text-sm text-primary">{course.institution}</p>
                 </div>
-                <div className="text-right text-sm text-white/70">
+                <div className="text-right text-sm text-muted">
                   <div>{formatSemester(course.semester, course.year)}</div>
                   <div>{formatCredits(course.credits)}</div>
                 </div>
               </div>
 
               {course.description && (
-                <p className="mt-2 text-sm text-white/70">{course.description}</p>
+                <p className="mt-2 text-sm text-muted">{course.description}</p>
               )}
 
               {course.topics && course.topics.length > 0 && (
@@ -196,7 +207,7 @@ export default async function CoursesPage() {
         <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {Object.entries(coursesByCategory).map(([category, entries]) =>
             entries && entries.length > 0 ? (
-              <div key={category} className="rounded-2xl border border-white/10 p-5">
+              <div key={category} className="rounded-2xl border border-overlay-border p-5">
                 <h3 className="text-lg font-medium capitalize mb-3">
                   {category.replace(/([A-Z])/g, " $1").trim()}
                 </h3>
@@ -204,7 +215,7 @@ export default async function CoursesPage() {
                   {entries.map((course) => (
                     <div key={course.id} className="text-sm">
                       <div className="font-medium">{course.title}</div>
-                      <div className="text-white/50 text-xs">
+                      <div className="text-overlay-text-muted text-xs">
                         {course.code} • {formatSemester(course.semester, course.year)}
                       </div>
                     </div>
@@ -216,5 +227,6 @@ export default async function CoursesPage() {
         </div>
       </section>
     </div>
+    </PageTransition>
   );
 }
