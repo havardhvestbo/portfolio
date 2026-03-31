@@ -1,21 +1,35 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { DM_Sans, JetBrains_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { Footer } from "../components/Footer";
-import { Navbar } from "../components/Navbar";
-import { ThemeProvider } from "../components/ThemeProvider";
 import { getNavigation, getPersonalInfo, getSiteConfig } from "@/lib/api";
+import { Footer } from "@/components/Footer";
+import { Navbar } from "@/components/Navbar";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { fallbackNavigation, fallbackPersonalInfo, fallbackSiteConfig } from "@/lib/portfolioFallback";
 import type { NavLink, PersonalInfo } from "@/types/portfolio";
 
-const geistSans = Geist({
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  variable: "--font-geist-sans",
+  variable: "--font-playfair",
+  weight: ["400", "600"],
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-dm-sans",
+  weight: ["400", "500"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+  weight: ["400", "500"],
 });
 
 const FALLBACK_METADATA: Metadata = {
-  title: { default: "Håvard - Portfolio", template: "%s | Håvard" },
-  description: "Projects, education, and contact.",
-  metadataBase: new URL("http://localhost:3000"),
+  title: { default: fallbackSiteConfig.name, template: `%s | ${fallbackSiteConfig.name}` },
+  description: fallbackSiteConfig.description,
+  metadataBase: new URL(fallbackSiteConfig.url),
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -47,26 +61,37 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  let navLinks: NavLink[] = [];
-  let personalInfo: PersonalInfo | null = null;
+  let navLinks: NavLink[] = fallbackNavigation;
+  let personalInfo: PersonalInfo = fallbackPersonalInfo;
 
   try {
-    [navLinks, personalInfo] = await Promise.all([
+    const [loadedNavLinks, loadedPersonalInfo] = await Promise.all([
       getNavigation(),
       getPersonalInfo(),
     ]);
+    navLinks = loadedNavLinks;
+    personalInfo = loadedPersonalInfo;
   } catch (error) {
     console.error("Failed to load layout data", error);
   }
 
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-      <body className={`${geistSans.variable} bg-background text-foreground font-sans antialiased`}>
+      <body
+        className={[
+          playfair.variable,
+          dmSans.variable,
+          jetbrainsMono.variable,
+          "grain-shell bg-background text-foreground font-sans antialiased",
+        ].join(" ")}
+      >
         <ThemeProvider>
           <a href="#main-content" className="skip-link">Skip to content</a>
-          <Navbar navLinks={navLinks} social={personalInfo?.social ?? {}} />
-          <main id="main-content" className="container-page py-10 min-h-[calc(100vh-8rem)]">{children}</main>
-          <Footer social={personalInfo?.social ?? {}} />
+          <Navbar navLinks={navLinks} social={personalInfo.social} />
+          <main id="main-content" className="min-h-screen pt-16">
+            {children}
+          </main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

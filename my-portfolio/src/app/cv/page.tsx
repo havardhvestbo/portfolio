@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { CardSurface } from "@/components/CardSurface";
 import { PageTransition } from "@/components/PageTransition";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { TechPill } from "@/components/ui/TechPill";
+import { TimelineEntry } from "@/components/ui/TimelineEntry";
 import { getEducation, getExperiences, getSkills } from "@/lib/api";
+import { fallbackEducation, fallbackExperiences, fallbackSkills } from "@/lib/portfolioFallback";
 import type { Education, Experience, Skill } from "@/types/portfolio";
 
 export const metadata: Metadata = {
@@ -13,64 +17,20 @@ function formatCategoryLabel(category: string) {
   return category.replace(/([A-Z])/g, " $1").replace(/^./, (value) => value.toUpperCase()).trim();
 }
 
-function ExperienceCard({ experience }: { experience: Experience }) {
-  const isBouvet = experience.id === "bouvet-asa";
-
-  return (
-    <CardSurface hover featured={isBouvet} className="p-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full border border-overlay-border bg-overlay-bg px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.14em] text-overlay-text-muted">
-              {experience.type}
-            </span>
-            <h3 className="text-xl font-semibold">{experience.title}</h3>
-            {isBouvet && (
-              <span className="rounded-full bg-primary/16 px-2 py-1 text-xs font-medium text-primary">
-                Featured
-              </span>
-            )}
-          </div>
-          <p className="mt-2 text-primary">{experience.company}</p>
-        </div>
-        <span className="text-sm text-overlay-text-muted">{experience.period}</span>
-      </div>
-
-      <p className="mt-3 text-overlay-text">{experience.description}</p>
-
-      {experience.technologies && experience.technologies.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {experience.technologies.map((technology) => (
-            <span
-              key={technology}
-              className={`rounded-lg border px-2 py-1 text-xs ${
-                isBouvet
-                  ? "border-primary/20 bg-primary/10 text-primary"
-                  : "border-overlay-border bg-overlay-bg text-overlay-text"
-              }`}
-            >
-              {technology}
-            </span>
-          ))}
-        </div>
-      )}
-    </CardSurface>
-  );
-}
-
 function EducationCard({ education }: { education: Education }) {
   return (
-    <CardSurface hover className="p-6">
-      <div className="flex items-start justify-between gap-4">
+    <CardSurface hover className="p-6 md:p-7">
+      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
-          <h3 className="text-xl font-semibold">{education.degree}</h3>
-          <p className="text-primary">{education.institution}</p>
+          <p className="section-kicker">Education</p>
+          <h3 className="mt-3 text-[1.125rem] font-medium leading-7 text-foreground">{education.degree}</h3>
+          <p className="mt-1 text-sm uppercase tracking-[0.12em] text-copy">{education.institution}</p>
         </div>
-        <span className="text-sm text-overlay-text-muted">{education.period}</span>
+        <span className="text-sm text-muted">{education.period}</span>
       </div>
 
       {education.description && (
-        <p className="mt-3 text-overlay-text">{education.description}</p>
+        <p className="mt-4 text-sm leading-7 text-copy">{education.description}</p>
       )}
 
       {education.gpa && (
@@ -81,9 +41,9 @@ function EducationCard({ education }: { education: Education }) {
 }
 
 export default async function CVPage() {
-  let experiences: Experience[] = [];
-  let education: Education[] = [];
-  let skills: Skill[] = [];
+  let experiences: Experience[] = fallbackExperiences;
+  let education: Education[] = fallbackEducation;
+  let skills: Skill[] = fallbackSkills;
 
   try {
     [experiences, education, skills] = await Promise.all([
@@ -103,28 +63,45 @@ export default async function CVPage() {
 
   return (
     <PageTransition>
-      <div className="space-y-12">
-        <div>
-          <h1 className="text-3xl font-bold">Curriculum Vitae</h1>
-          <p className="mt-2 text-muted">My professional experience, education, and skills.</p>
-        </div>
+      <div className="editorial-section">
+        <div className="editorial-container space-y-16">
+          <SectionHeading
+            eyebrow="Curriculum Vitae"
+            title="Experience, education, and skills"
+            intro="A fuller record of the work, studies, and technical areas that shape how I approach software projects."
+          />
 
-        <section>
-          <h2 className="mb-6 text-2xl font-semibold">Experience</h2>
-          <div className="space-y-6">
+          <section className="space-y-8">
+            <SectionHeading
+              eyebrow="Timeline"
+              title="Experience"
+              intro="Roles that developed my communication, adaptability, and ability to contribute in teams."
+            />
+
+            <div className="space-y-8">
             {experiences.map((experience) => (
-              <ExperienceCard key={experience.id} experience={experience} />
+                <TimelineEntry
+                  key={experience.id}
+                  align={experience.id === "bouvet-asa" ? "right" : "left"}
+                  period={experience.period}
+                  title={experience.title}
+                  subtitle={experience.company}
+                  description={experience.description}
+                  eyebrow={experience.type}
+                  technologies={experience.technologies}
+                  featured={experience.id === "bouvet-asa"}
+                />
             ))}
 
             {experiences.length === 0 && (
               <p className="text-muted">Experience data is unavailable right now.</p>
             )}
-          </div>
-        </section>
+            </div>
+          </section>
 
-        <section>
-          <h2 className="mb-6 text-2xl font-semibold">Education</h2>
-          <div className="space-y-6">
+          <section className="space-y-8">
+            <SectionHeading eyebrow="Study" title="Education" />
+            <div className="grid gap-6 lg:grid-cols-2">
             {education.map((entry) => (
               <EducationCard key={entry.id} education={entry} />
             ))}
@@ -132,28 +109,28 @@ export default async function CVPage() {
             {education.length === 0 && (
               <p className="text-muted">Education data is unavailable right now.</p>
             )}
-          </div>
-        </section>
+            </div>
+          </section>
 
-        <section>
-          <h2 className="mb-6 text-2xl font-semibold">Skills</h2>
-          <div className="grid gap-6 md:grid-cols-2">
+          <section className="space-y-8">
+            <SectionHeading eyebrow="Capabilities" title="Skills" />
+            <div className="grid gap-6 md:grid-cols-2">
             {Object.entries(groupedSkills).map(([category, categorySkills]) => (
-              <CardSurface key={category} className="p-6">
-                <h3 className="mb-3 text-lg font-semibold">
+                <CardSurface key={category} className="p-6 md:p-7">
+                  <p className="section-kicker">{formatCategoryLabel(category)}</p>
+                  <h3 className="mt-3 text-[1.125rem] font-medium leading-7 text-foreground">
                   {formatCategoryLabel(category)}
                 </h3>
-                <div className="flex flex-wrap gap-2">
+                  <div className="mt-5 flex flex-wrap gap-2">
                   {categorySkills.map((skill) => (
-                    <span
-                      key={skill.name}
-                      className="rounded-lg border border-overlay-border bg-overlay-bg px-3 py-1.5 text-sm"
-                    >
+                      <TechPill key={skill.name}>
                       {skill.name}
                       {skill.level && (
-                        <span className="ml-1 text-xs text-muted">({skill.level})</span>
+                          <span className="ml-1 text-[11px] uppercase tracking-[0.1em] text-muted">
+                            {skill.level}
+                          </span>
                       )}
-                    </span>
+                      </TechPill>
                   ))}
                 </div>
               </CardSurface>
@@ -162,8 +139,9 @@ export default async function CVPage() {
             {skills.length === 0 && (
               <p className="text-muted">Skill data is unavailable right now.</p>
             )}
-          </div>
-        </section>
+            </div>
+          </section>
+        </div>
       </div>
     </PageTransition>
   );

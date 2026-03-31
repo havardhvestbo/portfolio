@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { CardSurface } from "@/components/CardSurface";
 import { PageTransition } from "@/components/PageTransition";
-import { TechChips } from "@/components/TechChips";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { TechPill } from "@/components/ui/TechPill";
 import { getCourses } from "@/lib/api";
+import { fallbackCourses } from "@/lib/portfolioFallback";
 import type { Course, CourseCategory, CourseLevel, CourseSemester } from "@/types/portfolio";
 
 export const metadata: Metadata = {
@@ -22,6 +24,8 @@ const letterToPoints: Record<string, number> = {
 };
 
 const positiveGrades = new Set(["A", "B", "PASSED", "PASS"]);
+const formatCategoryLabel = (value: string) =>
+  value.replace(/([A-Z])/g, " $1").replace(/^./, (letter) => letter.toUpperCase()).trim();
 
 const formatCredits = (credits?: number) => (credits ? `${credits} ECTS` : "");
 
@@ -50,14 +54,7 @@ const buildCategories = (courses: Course[]): CoursesByCategory => {
 const getGradeBadgeStyle = (grade?: string) => {
   const isPositive = grade ? positiveGrades.has(grade.trim().toUpperCase()) : false;
 
-  return {
-    borderRadius: "9999px",
-    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
-    fontWeight: 600,
-    backgroundColor: isPositive ? "rgba(34,197,94,0.24)" : "rgba(250,204,21,0.18)",
-    color: isPositive ? "#4ade80" : "#facc15",
-    border: isPositive ? "1px solid rgba(74,222,128,0.28)" : "1px solid rgba(250,204,21,0.18)",
-  };
+  return ["grade-badge", isPositive ? "grade-badge-positive" : "grade-badge-default"].join(" ");
 };
 
 function calcWeightedAverageECTS(courses: Course[]) {
@@ -92,34 +89,36 @@ function CourseList({ courses }: { courses: Course[] }) {
         const credits = formatCredits(course.credits);
 
         return (
-          <CardSurface as="li" key={course.id} hover className="p-5">
+          <CardSurface as="li" key={course.id} hover className="p-5 md:p-6">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="mb-2 flex items-center gap-2">
-                  <span className="text-xs font-mono text-overlay-text-muted">{course.code}</span>
+                  <span className="text-xs font-mono text-muted">{course.code}</span>
                   {course.grade && (
-                    <span className="px-2 py-0.5 text-xs" style={getGradeBadgeStyle(course.grade)}>
+                    <span className={getGradeBadgeStyle(course.grade)}>
                       {course.grade}
                     </span>
                   )}
                 </div>
-                <h3 className="text-lg font-semibold">{course.title}</h3>
+                <h3 className="text-lg font-medium leading-7 text-foreground">{course.title}</h3>
               </div>
             </div>
 
-            <div className="mt-2 flex flex-wrap gap-3 text-sm text-muted">
+            <div className="mt-3 flex flex-wrap gap-3 text-sm text-muted">
               <span>{course.institution}</span>
               {semester && <span>{semester}</span>}
               {credits && <span>{credits}</span>}
             </div>
 
             {course.description && (
-              <p className="mt-3 text-sm text-overlay-text">{course.description}</p>
+              <p className="mt-4 text-sm leading-7 text-copy">{course.description}</p>
             )}
 
             {course.topics && course.topics.length > 0 && (
-              <div className="mt-4">
-                <TechChips items={course.topics} max={6} />
+              <div className="mt-5 flex flex-wrap gap-2">
+                {course.topics.slice(0, 6).map((topic) => (
+                  <TechPill key={topic}>{topic}</TechPill>
+                ))}
               </div>
             )}
           </CardSurface>
@@ -130,7 +129,7 @@ function CourseList({ courses }: { courses: Course[] }) {
 }
 
 export default async function CoursesPage() {
-  let courses: Course[] = [];
+  let courses: Course[] = fallbackCourses;
 
   try {
     courses = await getCourses();
@@ -141,15 +140,15 @@ export default async function CoursesPage() {
   if (courses.length === 0) {
     return (
       <PageTransition>
-        <div className="space-y-4 py-20 text-center">
-          <h1 className="text-3xl font-bold">Courses</h1>
-          <p className="text-muted">Course information is unavailable at the moment.</p>
-          <a
-            href="/courses"
-            className="inline-block rounded-xl bg-primary px-5 py-2.5 font-medium text-primary-contrast transition hover:opacity-90"
-          >
-            Try again
-          </a>
+        <div className="editorial-section">
+          <div className="editorial-container text-center">
+            <SectionHeading
+              align="center"
+              eyebrow="Academic Record"
+              title="Courses"
+              intro="Course information is unavailable at the moment."
+            />
+          </div>
         </div>
       </PageTransition>
     );
@@ -163,67 +162,70 @@ export default async function CoursesPage() {
 
   return (
     <PageTransition>
-      <div className="space-y-16">
-        <section>
-          <h1 className="text-4xl font-bold leading-tight md:text-5xl">Courses</h1>
-          <p className="mt-3 text-lg text-muted">
-            Academic coursework from my Bachelor&apos;s and Master&apos;s degree programs.
-          </p>
-        </section>
+      <div className="editorial-section">
+        <div className="editorial-container space-y-16">
+          <section>
+            <SectionHeading
+              eyebrow="Academic Record"
+              title="Courses"
+              intro="Academic coursework from my Bachelor’s and Master’s degree programs."
+            />
+          </section>
 
-        <section>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <section>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <CardSurface className="p-5">
-              <div className="text-2xl font-bold text-primary">{bachelorCourses.length}</div>
-              <div className="text-sm text-muted">Bachelor Courses</div>
+                <div className="text-3xl font-medium text-primary">{bachelorCourses.length}</div>
+                <div className="mt-2 text-sm uppercase tracking-[0.12em] text-muted">Bachelor Courses</div>
             </CardSurface>
             <CardSurface className="p-5">
-              <div className="text-2xl font-bold text-primary">{masterCourses.length}</div>
-              <div className="text-sm text-muted">Master Courses</div>
+                <div className="text-3xl font-medium text-primary">{masterCourses.length}</div>
+                <div className="mt-2 text-sm uppercase tracking-[0.12em] text-muted">Master Courses</div>
             </CardSurface>
             <CardSurface className="p-5">
-              <div className="text-2xl font-bold text-primary">{totalECTS}</div>
-              <div className="text-sm text-muted">Total ECTS</div>
+                <div className="text-3xl font-medium text-primary">{totalECTS}</div>
+                <div className="mt-2 text-sm uppercase tracking-[0.12em] text-muted">Total ECTS</div>
             </CardSurface>
             <CardSurface className="p-5">
-              <div className="text-2xl font-bold text-primary">
+                <div className="text-3xl font-medium text-primary">
                 {weightedAverage ? weightedAverage.toFixed(2) : "-"}
               </div>
-              <div className="text-sm text-muted">ECTS-weighted average (A=5 to F=0)</div>
-            </CardSurface>
-          </div>
-        </section>
+                <div className="mt-2 text-sm uppercase tracking-[0.12em] text-muted">ECTS-weighted Average</div>
+              </CardSurface>
+            </div>
+          </section>
 
-        <section>
-          <h2 className="text-2xl font-semibold">Bachelor&apos;s Degree</h2>
-          <CourseList courses={bachelorCourses} />
-        </section>
+          <section>
+            <SectionHeading eyebrow="Undergraduate" title="Bachelor’s Degree" />
+            <CourseList courses={bachelorCourses} />
+          </section>
 
-        <section>
-          <h2 className="text-2xl font-semibold">Master&apos;s Degree</h2>
-          <CourseList courses={masterCourses} />
-        </section>
+          <section>
+            <SectionHeading eyebrow="Graduate" title="Master’s Degree" />
+            <CourseList courses={masterCourses} />
+          </section>
 
-        <section>
-          <h2 className="text-2xl font-semibold">By Category</h2>
-          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <section>
+            <SectionHeading eyebrow="Browse" title="By Category" />
+            <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {Object.entries(coursesByCategory).map(([category, entries]) =>
               entries && entries.length > 0 ? (
-                <CardSurface key={category} className="p-5">
-                  <h3 className="mb-3 text-lg font-medium capitalize">
-                    {category.replace(/([A-Z])/g, " $1").trim()}
-                  </h3>
-                  <div className="space-y-3">
+                  <CardSurface key={category} className="p-5 md:p-6">
+                    <p className="section-kicker">{formatCategoryLabel(category)}</p>
+                    <h3 className="mt-3 text-lg font-medium text-foreground">
+                      {formatCategoryLabel(category)}
+                    </h3>
+                    <div className="mt-5 space-y-4">
                     {entries.map((course) => {
                       const semester = formatSemester(course.semester, course.year);
 
                       return (
                         <div
                           key={course.id}
-                          className="border-b border-overlay-border pb-3 last:border-b-0 last:pb-0"
+                            className="border-b border-border-light pb-4 last:border-b-0 last:pb-0"
                         >
-                          <div className="font-medium">{course.title}</div>
-                          <div className="mt-1 text-xs text-muted">
+                            <div className="font-medium text-foreground">{course.title}</div>
+                            <div className="mt-1 text-xs uppercase tracking-[0.12em] text-muted">
                             {course.code}
                             {semester ? ` • ${semester}` : ""}
                           </div>
@@ -234,8 +236,9 @@ export default async function CoursesPage() {
                 </CardSurface>
               ) : null
             )}
-          </div>
-        </section>
+            </div>
+          </section>
+        </div>
       </div>
     </PageTransition>
   );

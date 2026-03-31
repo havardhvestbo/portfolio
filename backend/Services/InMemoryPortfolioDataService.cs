@@ -60,9 +60,12 @@ public class InMemoryPortfolioDataService : IPortfolioDataService
     private static PersonalInfo BuildPersonalInfo() => new()
     {
         Name = "Håvard Hetland Vestbø",
-        Title = "Computer Engineering (BSc) & Management of Technology (MSc)",
-        Description = "I’m a Master’s student in Management of Technology and Computer Engineering graduate, passionate about crafting frontend and full-stack applications that make a difference.",
-        Status = "Available for projects",
+        Title = "Fullstack developer, NTNU graduate, and future consultant at Bouvet",
+        Description = "Fullstack developer with a passion for building thoughtful digital experiences. BSc Computer Engineering, MSc Management of Technology at NTNU.",
+        Status = "Available August 2026",
+        Email = "havardvestbo@icloud.com",
+        Location = "Bokn, Norway",
+        AvailabilityLabel = "Available August 2026",
         Image = "/me.jpeg",
         ImageAlt = "Portrait of Håvard",
         Social = new Dictionary<string, SocialLink>
@@ -70,54 +73,49 @@ public class InMemoryPortfolioDataService : IPortfolioDataService
             ["github"] = new SocialLink { Url = "https://github.com/havardhvestbo", Label = "GitHub" },
             ["linkedin"] = new SocialLink { Url = "https://www.linkedin.com/in/h%C3%A5vard-hetland-vestb%C3%B8-0a9324151/", Label = "LinkedIn" }
         },
+        HighlightMetric = new HighlightMetric
+        {
+            Value = "5+",
+            Label = "Years building and shipping software"
+        },
+        NextRole = new NextRole
+        {
+            Company = "Bouvet",
+            Start = "August 2026",
+            Label = "Starting at Bouvet consultancy"
+        },
+        AboutParagraphs = new List<string>
+        {
+            "I’m from Bokn on Norway’s west coast and currently finishing an MSc in Management of Technology after completing a BSc in Computer Engineering at NTNU. I enjoy the overlap between solid engineering practice, product thinking, and the human side of building software.",
+            "My most formative recent experience was at Bouvet ASA, where I worked on a client project for Bane NOR and contributed accessible, maintainable frontend features in React, React Router, and TypeScript alongside designers and backend developers.",
+            "I’m at my best when I can combine careful implementation with structure, clarity, and momentum; writing good code, collaborating well, and helping ideas move from rough concept to something real and useful."
+        },
         Technologies = new List<string>
         {
             "React",
-            "React Router",
             "Next.js",
             "TypeScript",
-            "JavaScript",
             "Tailwind CSS",
-            "HTML/CSS",
-            "MUI",
-            "Thymeleaf",
-            "UI/UX Design",
+            "C# / .NET",
             "Spring Boot",
-            ".NET MAUI",
-            "Node.js",
-            "REST API",
-            "Spring Security",
-            "Flutter",
-            "Dart",
             "PostgreSQL",
-            "MySQL",
-            "Unity",
-            "C#",
+            "React Router",
             "Git",
-            "Jira",
-            "Confluence",
-            "Postman",
-            "Swagger",
-            "Nginx",
-            "Linux",
-            "FTP",
-            "SSH",
-            "JWT Authentication",
-            "SCRUM"
+            "UI / UX"
         }
     };
 
     private static SiteConfig BuildSiteConfig() => new()
     {
-        Name = "Håvard - portfolio",
-        Description = "Projects, education, and contact.",
+        Name = "Håvard",
+        Description = "Editorial portfolio for Håvard Vestbø: projects, experience, and contact.",
         Url = "https://your-domain.com",
         OgImage = "/og-image.jpg",
         Colors = new SiteColors
         {
-            Primary = "#facc15",
-            Background = "#000000",
-            Foreground = "#ffffff"
+            Primary = "#8B6914",
+            Background = "#F5F0E8",
+            Foreground = "#2C2418"
         },
         Social = new Dictionary<string, string>
         {
@@ -128,11 +126,12 @@ public class InMemoryPortfolioDataService : IPortfolioDataService
 
     private static IReadOnlyList<NavLink> BuildNavigation() => new List<NavLink>
     {
-        new() { Href = "/", Label = "Home" },
-        new() { Href = "/projects", Label = "Projects" },
-        new() { Href = "/about", Label = "About" },
-        new() { Href = "/cv", Label = "CV" },
-        new() { Href = "/courses", Label = "Courses" }
+        new() { Href = "/#about", Label = "About", Group = "primary" },
+        new() { Href = "/#projects", Label = "Projects", Group = "primary" },
+        new() { Href = "/#experience", Label = "Experience", Group = "primary" },
+        new() { Href = "/#contact", Label = "Contact", Group = "primary" },
+        new() { Href = "/cv", Label = "CV", Group = "secondary" },
+        new() { Href = "/courses", Label = "Courses", Group = "secondary" }
     };
 
     private static IReadOnlyList<Project> BuildProjects() => new List<Project>

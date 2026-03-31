@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
 import { CardSurface } from "@/components/CardSurface";
+import { PageTransition, StaggerContainer, StaggerItem } from "@/components/PageTransition";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { getPersonalInfo } from "@/lib/api";
-import { PageTransition } from "@/components/PageTransition";
+import { fallbackPersonalInfo } from "@/lib/portfolioFallback";
 import type { PersonalInfo } from "@/types/portfolio";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Learn more about Havard -- background, values, and how to get in touch.",
+  description: "Background, values, and editorial profile for Håvard.",
 };
 
 export default async function AboutPage() {
-  let personalInfo: PersonalInfo | null = null;
+  let personalInfo: PersonalInfo = fallbackPersonalInfo;
 
   try {
     personalInfo = await getPersonalInfo();
@@ -20,77 +22,88 @@ export default async function AboutPage() {
 
   return (
     <PageTransition>
-      <div className="space-y-16">
-        <section>
-          <h2 className="text-2xl font-semibold">About Me</h2>
-          <div className="mt-6 space-y-4 text-overlay-text text-lg leading-relaxed">
-            <p>
-              I&apos;m {personalInfo?.name ?? "a Norwegian engineering student"}, originally from Varhaug just south of Stavanger,
-              and currently pursuing an MSc in Management of Technology after a BSc in Computer Engineering.
-              I&apos;m aiming for a career as a full-stack developer or tech/project lead — roles where I can
-              combine hands-on coding with guiding teams and seeing the bigger picture.
-            </p>
-            <p>
-              Recently, I worked as a frontend summer intern at Bouvet ASA on a client project for Bane NOR,
-              building React + React Router + TypeScript features in a collaborative team at their Oslo office.
-              It gave me a taste of delivering production-ready code while keeping accessibility,
-              maintainability, and deadlines in mind.
-            </p>
-            <p>
-              I love solving problems, creating applications that make life easier, and working with others
-              to bring ideas to life. My mix of software development skills and technology management
-              training gives me an eye for the whole process — from initial concept to final deployment
-              (and the inevitable &quot;can we just add one more thing?&quot; meeting).
-            </p>
-            <p>
-              Outside of work and study, you&apos;ll usually find me skiing or hiking — and during my exchange
-              semester in Australia, attempting to stay on a surfboard for more than five seconds.
-              Whether on the slopes, in the ocean, or in a codebase, I enjoy challenges that push me to grow.
-            </p>
-          </div>
-        </section>
+      <div className="editorial-section">
+        <div className="editorial-container space-y-16">
+          <section className="grid gap-10 lg:grid-cols-[minmax(220px,0.32fr)_minmax(0,0.68fr)]">
+            <div className="space-y-4">
+              <p className="font-serif text-7xl leading-none tracking-[-0.04em] text-primary md:text-[5.5rem]">
+                {personalInfo.highlightMetric.value}
+              </p>
+              <p className="section-kicker">{personalInfo.highlightMetric.label}</p>
+            </div>
 
-      <section>
-        <h3 className="text-xl font-semibold">What I Value</h3>
-        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-          <CardSurface as="li" className="p-4">Teamwork and knowledge sharing</CardSurface>
-          <CardSurface as="li" className="p-4">Clear, maintainable code</CardSurface>
-          <CardSurface as="li" className="p-4">User-first, accessible design</CardSurface>
-          <CardSurface as="li" className="p-4">Solving real problems, not just “cool” ones</CardSurface>
-        </ul>
-      </section>
+            <div className="space-y-8">
+              <SectionHeading
+                eyebrow="Longform Profile"
+                title="About"
+                intro={personalInfo.title}
+              />
 
-        <section>
-          <h2 className="text-2xl font-semibold">Let&apos;s Connect</h2>
-          <div className="mt-6 flex flex-wrap gap-3">
-            {personalInfo?.social?.github && (
+              <div className="space-y-5 text-[1.0625rem] leading-8 text-copy">
+                {personalInfo.aboutParagraphs.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <SectionHeading
+              eyebrow="Values"
+              title="How I like to work"
+              intro="The habits and priorities I try to bring into teams, products, and codebases."
+            />
+
+            <StaggerContainer className="mt-8 grid gap-4 md:grid-cols-2">
+              {[
+                "Teamwork and knowledge sharing",
+                "Clear, maintainable code",
+                "User-first, accessible design",
+                "Solving real problems, not just fashionable ones",
+              ].map((value) => (
+                <StaggerItem key={value}>
+                  <CardSurface className="p-6 text-[1rem] leading-7 text-copy">{value}</CardSurface>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          </section>
+
+          <section className="grid gap-6 lg:grid-cols-[minmax(0,0.65fr)_minmax(260px,0.35fr)]">
+            <CardSurface featured className="p-7">
+              <p className="section-kicker">Next Chapter</p>
+              <h2 className="mt-4 font-serif text-3xl leading-tight text-foreground">
+                {personalInfo.nextRole?.label ?? "Open to the next challenge"}
+              </h2>
+              {personalInfo.nextRole ? (
+                <p className="mt-4 text-[1rem] leading-7 text-copy">
+                  Starting at {personalInfo.nextRole.company} in {personalInfo.nextRole.start}.
+                </p>
+              ) : null}
+            </CardSurface>
+
+            <CardSurface className="p-7">
+              <p className="section-kicker">Connect</p>
               <a
-                href={personalInfo.social.github.url}
-                target="_blank"
-                rel="noreferrer"
-                className="px-5 py-2.5 rounded-xl border border-overlay-border-strong hover:bg-overlay-bg-hover font-medium transition"
+                href={`mailto:${personalInfo.email}`}
+                className="mt-4 inline-block font-serif text-2xl italic text-primary"
               >
-                GitHub
+                {personalInfo.email}
               </a>
-            )}
-            {personalInfo?.social?.linkedin && (
-              <a
-                href={personalInfo.social.linkedin.url}
-                target="_blank"
-                rel="noreferrer"
-                className="px-5 py-2.5 rounded-xl border border-overlay-border-strong hover:bg-overlay-bg-hover font-medium transition"
-              >
-                LinkedIn
-              </a>
-            )}
-            <a
-              href="mailto:havardvestbo@icloud.com"
-              className="px-5 py-2.5 rounded-xl bg-primary text-primary-contrast font-medium hover:opacity-90 transition"
-            >
-              Email me
-            </a>
-          </div>
-        </section>
+              <div className="mt-6 flex flex-wrap gap-4 text-sm">
+                {personalInfo.social.github ? (
+                  <a href={personalInfo.social.github.url} target="_blank" rel="noreferrer" className="editorial-link">
+                    GitHub
+                  </a>
+                ) : null}
+                {personalInfo.social.linkedin ? (
+                  <a href={personalInfo.social.linkedin.url} target="_blank" rel="noreferrer" className="editorial-link">
+                    LinkedIn
+                  </a>
+                ) : null}
+              </div>
+            </CardSurface>
+          </section>
+        </div>
       </div>
     </PageTransition>
   );

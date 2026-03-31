@@ -9,6 +9,12 @@ import type {
   SiteConfig,
   Skill
 } from "@/types/portfolio";
+import {
+  normalizeNavigation,
+  normalizePersonalInfo,
+  normalizePortfolioSnapshot,
+  normalizeSiteConfig,
+} from "@/lib/portfolioFallback";
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:5000").replace(/\/$/, "");
 const PORTFOLIO_API_ROOT = `${API_BASE_URL}/api/portfolio`;
@@ -39,16 +45,16 @@ async function fetchFromPortfolio<T>(endpoint: string, { init, revalidate }: Fet
 }
 
 export const getPortfolioSnapshot = (args?: FetchArgs) =>
-  fetchFromPortfolio<PortfolioSnapshot>("", args);
+  fetchFromPortfolio<unknown>("", args).then(normalizePortfolioSnapshot);
 
 export const getPersonalInfo = (args?: FetchArgs) =>
-  fetchFromPortfolio<PersonalInfo>("/personal", args);
+  fetchFromPortfolio<unknown>("/personal", args).then(normalizePersonalInfo);
 
 export const getSiteConfig = (args?: FetchArgs) =>
-  fetchFromPortfolio<SiteConfig>("/config", args);
+  fetchFromPortfolio<unknown>("/config", args).then(normalizeSiteConfig);
 
 export const getNavigation = (args?: FetchArgs) =>
-  fetchFromPortfolio<NavLink[]>("/navigation", args);
+  fetchFromPortfolio<unknown>("/navigation", args).then(normalizeNavigation);
 
 export const getProjects = (args?: FetchArgs) =>
   fetchFromPortfolio<Project[]>("/projects", args);

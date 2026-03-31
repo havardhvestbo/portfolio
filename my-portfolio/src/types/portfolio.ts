@@ -1,6 +1,7 @@
 export type ExperienceType = "work" | "education" | "project";
 export type CourseLevel = "bachelor" | "master" | "phd" | "certificate" | "online";
 export type CourseSemester = "spring" | "fall" | "summer";
+export type NavLinkGroup = "primary" | "secondary";
 export type CourseCategory =
   | "programming"
   | "mathematics"
@@ -17,14 +18,31 @@ export interface SocialLink {
   label: string;
 }
 
+export interface HighlightMetric {
+  value: string;
+  label: string;
+}
+
+export interface NextRole {
+  company: string;
+  start: string;
+  label: string;
+}
+
 export interface PersonalInfo {
   name: string;
   title: string;
   description: string;
   status?: string;
+  email: string;
+  location: string;
+  availabilityLabel: string;
   image?: string;
   imageAlt?: string;
   social: Record<string, SocialLink>;
+  highlightMetric: HighlightMetric;
+  nextRole?: NextRole;
+  aboutParagraphs: string[];
   technologies: string[];
 }
 
@@ -46,6 +64,7 @@ export interface SiteConfig {
 export interface NavLink {
   href: string;
   label: string;
+  group: NavLinkGroup;
 }
 
 export interface ProjectLinks {

@@ -1,29 +1,32 @@
-import { HomePageContent } from "@/components/HomePageContent";
+import { AboutSection } from "@/components/AboutSection";
+import { ContactSection } from "@/components/ContactSection";
+import { ExperienceSection } from "@/components/ExperienceSection";
+import { HeroSection } from "@/components/HeroSection";
+import { ProjectsSection } from "@/components/ProjectsSection";
 import { getPortfolioSnapshot } from "@/lib/api";
+import { fallbackPortfolioSnapshot } from "@/lib/portfolioFallback";
 
 export default async function HomePage() {
-  try {
-    const snapshot = await getPortfolioSnapshot();
+  let snapshot = fallbackPortfolioSnapshot;
 
-    return (
-      <HomePageContent
-        personalInfo={snapshot.personalInfo}
-        featuredProjects={snapshot.featuredProjects}
-        experiences={snapshot.experiences}
-      />
-    );
+  try {
+    snapshot = await getPortfolioSnapshot();
   } catch (error) {
     console.error("Failed to load home page data", error);
-    return (
-      <div className="space-y-6 text-center py-20">
-        <h1 className="text-3xl font-bold">Welcome</h1>
-        <p className="text-muted">
-          We couldn&apos;t load the latest portfolio data right now.
-        </p>
-        <a href="/" className="inline-block mt-4 px-5 py-2.5 rounded-xl bg-primary text-primary-contrast font-medium hover:opacity-90 transition">
-          Try again
-        </a>
-      </div>
-    );
   }
+
+  const featuredProjects = snapshot.featuredProjects.length
+    ? snapshot.featuredProjects
+    : snapshot.projects.filter((project) => project.featured);
+  const workExperience = snapshot.experiences.filter((experience) => experience.type === "work");
+
+  return (
+    <>
+      <HeroSection personalInfo={snapshot.personalInfo} />
+      <AboutSection personalInfo={snapshot.personalInfo} />
+      <ProjectsSection projects={featuredProjects} />
+      <ExperienceSection experiences={workExperience.length ? workExperience : snapshot.experiences} />
+      <ContactSection personalInfo={snapshot.personalInfo} />
+    </>
+  );
 }
