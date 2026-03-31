@@ -1,6 +1,6 @@
 # 🎨 Håvard Hetland Vestbø - Portfolio
 
-A modern, responsive portfolio website built with Next.js 15, showcasing my projects, experience, and skills as a Computer Engineering graduate and Management of Technology student.
+A modern, responsive portfolio website built with Next.js 15, showcasing my projects, experience, and skills as a Computer Engineering graduate and Management of Technology student..
 
 ## ✨ Features
 
