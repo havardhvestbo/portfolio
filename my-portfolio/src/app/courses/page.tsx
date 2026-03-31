@@ -4,7 +4,6 @@ import { PageTransition } from "@/components/PageTransition";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TechPill } from "@/components/ui/TechPill";
 import { getCourses } from "@/lib/api";
-import { fallbackCourses } from "@/lib/portfolioFallback";
 import type { Course, CourseCategory, CourseLevel, CourseSemester } from "@/types/portfolio";
 
 export const metadata: Metadata = {
@@ -129,13 +128,7 @@ function CourseList({ courses }: { courses: Course[] }) {
 }
 
 export default async function CoursesPage() {
-  let courses: Course[] = fallbackCourses;
-
-  try {
-    courses = await getCourses();
-  } catch (error) {
-    console.error("Failed to load courses", error);
-  }
+  const courses = await getCourses();
 
   if (courses.length === 0) {
     return (

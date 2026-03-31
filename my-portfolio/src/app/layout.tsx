@@ -6,8 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { fallbackNavigation, fallbackPersonalInfo, fallbackSiteConfig } from "@/lib/portfolioFallback";
-import type { NavLink, PersonalInfo } from "@/types/portfolio";
+import type { NavLink, SocialLink } from "@/types/portfolio";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -28,9 +27,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 const FALLBACK_METADATA: Metadata = {
-  title: { default: fallbackSiteConfig.name, template: `%s | ${fallbackSiteConfig.name}` },
-  description: fallbackSiteConfig.description,
-  metadataBase: new URL(fallbackSiteConfig.url),
+  title: { default: "Portfolio", template: "%s | Portfolio" },
+  description: "Frontend for the portfolio website.",
+  metadataBase: new URL("https://example.com"),
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -62,8 +61,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  let navLinks: NavLink[] = fallbackNavigation;
-  let personalInfo: PersonalInfo = fallbackPersonalInfo;
+  let navLinks: NavLink[] = [];
+  let socialLinks: Record<string, SocialLink> = {};
 
   try {
     const [loadedNavLinks, loadedPersonalInfo] = await Promise.all([
@@ -71,9 +70,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       getPersonalInfo(),
     ]);
     navLinks = loadedNavLinks;
-    personalInfo = loadedPersonalInfo;
+    socialLinks = loadedPersonalInfo.social;
   } catch (error) {
-    console.error("Failed to load layout data", error);
+    console.error("Failed to load layout data from portfolio API", error);
   }
 
   return (
@@ -88,7 +87,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       >
         <ThemeProvider>
           <a href="#main-content" className="skip-link">Skip to content</a>
-          <Navbar navLinks={navLinks} social={personalInfo.social} />
+          <Navbar navLinks={navLinks} social={socialLinks} />
           <ThemeToggle />
           <main id="main-content" className="min-h-screen pt-16">
             {children}

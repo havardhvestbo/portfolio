@@ -3,8 +3,6 @@ import { PageTransition, StaggerContainer, StaggerItem } from "@/components/Page
 import { ProjectCard } from "@/components/ui/ProjectCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { getProjects } from "@/lib/api";
-import { fallbackProjects } from "@/lib/portfolioFallback";
-import type { Project } from "@/types/portfolio";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -12,13 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ProjectsPage() {
-  let projects: Project[] = fallbackProjects;
-
-  try {
-    projects = await getProjects();
-  } catch (error) {
-    console.error("Failed to load projects", error);
-  }
+  const projects = await getProjects();
 
   if (projects.length === 0) {
     return (

@@ -12,6 +12,7 @@ type HeroSectionProps = {
 
 export function HeroSection({ personalInfo }: HeroSectionProps) {
   const titleParts = ["Håvard", "Developer", "Technologist"];
+  const statusLabel = personalInfo.status ?? personalInfo.availabilityLabel;
 
   return (
     <section
@@ -27,7 +28,7 @@ export function HeroSection({ personalInfo }: HeroSectionProps) {
             className="inline-flex items-center gap-3 rounded-full border border-[var(--border-light)] bg-[var(--bg-secondary)] px-4 py-2 text-[13px] uppercase tracking-[0.08em] text-muted"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-[var(--available-dot)]" />
-            {personalInfo.availabilityLabel}
+            {statusLabel}
           </motion.div>
 
           <div className="mt-8 space-y-2">

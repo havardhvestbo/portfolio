@@ -3,8 +3,6 @@ import { CardSurface } from "@/components/CardSurface";
 import { PageTransition, StaggerContainer, StaggerItem } from "@/components/PageTransition";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { getPersonalInfo } from "@/lib/api";
-import { fallbackPersonalInfo } from "@/lib/portfolioFallback";
-import type { PersonalInfo } from "@/types/portfolio";
 
 export const metadata: Metadata = {
   title: "About",
@@ -12,13 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  let personalInfo: PersonalInfo = fallbackPersonalInfo;
-
-  try {
-    personalInfo = await getPersonalInfo();
-  } catch (error) {
-    console.error("Failed to load personal info", error);
-  }
+  const personalInfo = await getPersonalInfo();
 
   return (
     <PageTransition>

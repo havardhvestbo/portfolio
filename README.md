@@ -72,7 +72,7 @@ cd portfolio
 1. Configure environment variables
    ```bash
    cd ../my-portfolio
-   cp .env.example .env.local   # optional: adjust NEXT_PUBLIC_API_BASE_URL if needed
+   cp .env.example .env.local   # optional: adjust PORTFOLIO_API_BASE_URL if needed
    ```
 2. Install dependencies and start the dev server
    ```bash
@@ -83,10 +83,22 @@ cd portfolio
 
 ## 📝 Customization
 
-All display data lives in the ASP.NET Core service (`backend/Services/InMemoryPortfolioDataService.cs`).
-Update the relevant builder functions (e.g. `BuildPersonalInfo`, `BuildProjects`, `BuildCourses`) to change the content returned by the API, or replace the in-memory implementation with a database-backed service.
+All portfolio data lives in the ASP.NET Core backend, with the service composed from domain-specific seed files.
+Update the relevant seed file in `backend/Data/Seeds/` to change the content returned by the API, or replace the in-memory implementation with a database-backed service. The Next.js app is only the frontend and no longer carries its own duplicate content dataset.
 
 Whenever you change backend data, restart `dotnet run` so the new snapshot is served to the frontend.
+
+Backend data is organized by domain under `backend/Data/Seeds/`:
+- `PersonalInfoSeed.cs`
+- `SiteConfigSeed.cs`
+- `NavigationSeed.cs`
+- `ProjectsSeed.cs`
+- `ExperiencesSeed.cs`
+- `EducationSeed.cs`
+- `SkillsSeed.cs`
+- `CoursesSeed.cs`
+
+The site URL returned from the backend is configured via `Portfolio:SiteUrl` in appsettings, or `Portfolio__SiteUrl` as an environment variable in production.
 
 ## 📚 Available Scripts
 
@@ -124,11 +136,15 @@ The backend exposes the following JSON endpoints under `/api/portfolio`:
 
 ## 🌐 Deployment
 
-This portfolio is optimized for deployment on [Vercel](https://vercel.com/):
+The frontend can be deployed on [Vercel](https://vercel.com/), but the ASP.NET Core backend in `backend/` must be deployed separately:
 
-1. Push your code to GitHub
-2. Connect your repository to Vercel
-3. Deploy with zero configuration
+1. Deploy `backend/` to a .NET-capable host such as Render, Railway, Azure, or another ASP.NET hosting platform.
+2. Configure backend CORS with `CORS_ALLOWED_ORIGINS=https://your-vercel-domain.vercel.app,https://your-domain.com`.
+3. Set `Portfolio__SiteUrl=https://your-domain.com` on the backend host.
+4. Set `PORTFOLIO_API_BASE_URL=https://your-backend-domain.com` in the Vercel project for `my-portfolio/`.
+5. Deploy the Next.js frontend from `my-portfolio/`.
+
+Vercel does not run the ASP.NET Core backend folder for you. If the backend URL is missing or unreachable, the frontend now fails clearly instead of serving a second copy of the portfolio data.
 
 Alternative deployment platforms:
 - [Netlify](https://netlify.com)

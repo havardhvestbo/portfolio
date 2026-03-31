@@ -23,6 +23,7 @@ type HomePageContentProps = {
 
 export function HomePageContent({ personalInfo, featuredProjects, experiences }: HomePageContentProps) {
   const bouvet = experiences.find((experience) => experience.id === "bouvet-asa");
+  const statusLabel = personalInfo.status ?? personalInfo.availabilityLabel;
 
   const highlights: HighlightItem[] = [
     ...featuredProjects.map((project) => ({
@@ -88,13 +89,13 @@ export function HomePageContent({ personalInfo, featuredProjects, experiences }:
         </motion.div>
 
         <div className="order-2 md:order-2 text-center md:text-left">
-          {personalInfo.status && (
+          {statusLabel && (
             <motion.span
               {...fadeUp}
               className="inline-flex items-center gap-2 rounded-full border border-overlay-border bg-overlay-bg px-3 py-1 text-xs"
             >
               <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-              {personalInfo.status}
+              {statusLabel}
             </motion.span>
           )}
 

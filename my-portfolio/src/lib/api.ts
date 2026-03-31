@@ -9,15 +9,8 @@ import type {
   SiteConfig,
   Skill
 } from "@/types/portfolio";
-import {
-  normalizeNavigation,
-  normalizePersonalInfo,
-  normalizePortfolioSnapshot,
-  normalizeSiteConfig,
-} from "@/lib/portfolioFallback";
 
-const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:5000").replace(/\/$/, "");
-const PORTFOLIO_API_ROOT = `${API_BASE_URL}/api/portfolio`;
+const DEFAULT_LOCAL_API_BASE_URL = "http://localhost:5000";
 const DEFAULT_REVALIDATE_SECONDS = 1800;
 
 type FetchArgs = {
@@ -25,16 +18,52 @@ type FetchArgs = {
   revalidate?: number | false;
 };
 
+function getApiBaseUrl() {
+  const configuredApiBaseUrl = process.env.PORTFOLIO_API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  if (configuredApiBaseUrl && configuredApiBaseUrl.trim().length > 0) {
+    return configuredApiBaseUrl.replace(/\/$/, "");
+  }
+
+  if (process.env.NODE_ENV !== "production") {
+    return DEFAULT_LOCAL_API_BASE_URL;
+  }
+
+  throw new Error("Portfolio API base URL is not configured. Set PORTFOLIO_API_BASE_URL for production deployments.");
+}
+
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Unknown error";
+}
+
+function getRevalidateValue(revalidate?: number | false) {
+  if (typeof revalidate === "number") {
+    return revalidate;
+  }
+
+  if (revalidate === false || process.env.NODE_ENV !== "production") {
+    return 0;
+  }
+
+  return DEFAULT_REVALIDATE_SECONDS;
+}
+
 async function fetchFromPortfolio<T>(endpoint: string, { init, revalidate }: FetchArgs = {}) {
-  const url = `${PORTFOLIO_API_ROOT}${endpoint}`;
-  const response = await fetch(url, {
-    ...init,
-    headers: {
-      Accept: "application/json",
-      ...(init?.headers ?? {})
-    },
-    next: typeof revalidate === "number" ? { revalidate } : revalidate === false ? { revalidate: 0 } : { revalidate: DEFAULT_REVALIDATE_SECONDS }
-  });
+  const url = `${getApiBaseUrl()}/api/portfolio${endpoint}`;
+  let response: Response;
+
+  try {
+    response = await fetch(url, {
+      ...init,
+      headers: {
+        Accept: "application/json",
+        ...(init?.headers ?? {})
+      },
+      next: { revalidate: getRevalidateValue(revalidate) }
+    });
+  } catch (error) {
+    throw new Error(`Failed to reach Portfolio API at ${url}. ${getErrorMessage(error)}`);
+  }
 
   if (!response.ok) {
     const message = await response.text();
@@ -45,16 +74,16 @@ async function fetchFromPortfolio<T>(endpoint: string, { init, revalidate }: Fet
 }
 
 export const getPortfolioSnapshot = (args?: FetchArgs) =>
-  fetchFromPortfolio<unknown>("", args).then(normalizePortfolioSnapshot);
+  fetchFromPortfolio<PortfolioSnapshot>("", args);
 
 export const getPersonalInfo = (args?: FetchArgs) =>
-  fetchFromPortfolio<unknown>("/personal", args).then(normalizePersonalInfo);
+  fetchFromPortfolio<PersonalInfo>("/personal", args);
 
 export const getSiteConfig = (args?: FetchArgs) =>
-  fetchFromPortfolio<unknown>("/config", args).then(normalizeSiteConfig);
+  fetchFromPortfolio<SiteConfig>("/config", args);
 
 export const getNavigation = (args?: FetchArgs) =>
-  fetchFromPortfolio<unknown>("/navigation", args).then(normalizeNavigation);
+  fetchFromPortfolio<NavLink[]>("/navigation", args);
 
 export const getProjects = (args?: FetchArgs) =>
   fetchFromPortfolio<Project[]>("/projects", args);

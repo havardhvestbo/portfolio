@@ -5,16 +5,9 @@ import { HeroSection } from "@/components/HeroSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { TechMarquee } from "@/components/TechMarquee";
 import { getPortfolioSnapshot } from "@/lib/api";
-import { fallbackPortfolioSnapshot } from "@/lib/portfolioFallback";
 
 export default async function HomePage() {
-  let snapshot = fallbackPortfolioSnapshot;
-
-  try {
-    snapshot = await getPortfolioSnapshot();
-  } catch (error) {
-    console.error("Failed to load home page data", error);
-  }
+  const snapshot = await getPortfolioSnapshot();
 
   const featuredProjects = snapshot.featuredProjects.length
     ? snapshot.featuredProjects

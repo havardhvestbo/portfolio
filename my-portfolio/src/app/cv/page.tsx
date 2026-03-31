@@ -5,8 +5,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TechPill } from "@/components/ui/TechPill";
 import { TimelineEntry } from "@/components/ui/TimelineEntry";
 import { getEducation, getExperiences, getSkills } from "@/lib/api";
-import { fallbackEducation, fallbackExperiences, fallbackSkills } from "@/lib/portfolioFallback";
-import type { Education, Experience, Skill } from "@/types/portfolio";
+import type { Education, Skill } from "@/types/portfolio";
 
 export const metadata: Metadata = {
   title: "CV",
@@ -41,19 +40,11 @@ function EducationCard({ education }: { education: Education }) {
 }
 
 export default async function CVPage() {
-  let experiences: Experience[] = fallbackExperiences;
-  let education: Education[] = fallbackEducation;
-  let skills: Skill[] = fallbackSkills;
-
-  try {
-    [experiences, education, skills] = await Promise.all([
-      getExperiences(),
-      getEducation(),
-      getSkills(),
-    ]);
-  } catch (error) {
-    console.error("Failed to load CV data", error);
-  }
+  const [experiences, education, skills] = await Promise.all([
+    getExperiences(),
+    getEducation(),
+    getSkills(),
+  ]);
 
   const groupedSkills = skills.reduce<Record<string, Skill[]>>((accumulator, skill) => {
     accumulator[skill.category] = accumulator[skill.category] ?? [];

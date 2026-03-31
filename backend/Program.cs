@@ -1,15 +1,35 @@
 using Portfolio.Api.Services;
+using Portfolio.Api.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services
+    .AddOptions<PortfolioSiteOptions>()
+    .BindConfiguration(PortfolioSiteOptions.SectionName)
+    .PostConfigure(options =>
+    {
+        options.SiteUrl = string.IsNullOrWhiteSpace(options.SiteUrl)
+            ? "http://localhost:3000"
+            : options.SiteUrl.TrimEnd('/');
+    })
+    .Validate(options => Uri.TryCreate(options.SiteUrl, UriKind.Absolute, out _), "Portfolio site URL must be an absolute URL.")
+    .ValidateOnStart();
 builder.Services.AddSingleton<IPortfolioDataService, InMemoryPortfolioDataService>();
 
-var allowedOrigins = builder.Configuration
+var allowedOriginsFromConfiguration = builder.Configuration
     .GetSection("Cors:AllowedOrigins")
-    .Get<string[]>() ?? new[] { "http://localhost:3000", "https://localhost:3000" };
+    .Get<string[]>();
+
+var allowedOriginsFromEnvironment = builder.Configuration["Cors:AllowedOriginsCsv"]
+    ?? builder.Configuration["CORS_ALLOWED_ORIGINS"];
+
+var allowedOrigins = !string.IsNullOrWhiteSpace(allowedOriginsFromEnvironment)
+    ? allowedOriginsFromEnvironment
+        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+    : allowedOriginsFromConfiguration ?? new[] { "http://localhost:3000", "https://localhost:3000" };
 
 builder.Services.AddCors(options =>
 {
