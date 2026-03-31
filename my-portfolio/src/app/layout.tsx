@@ -4,6 +4,7 @@ import "./globals.css";
 import { getNavigation, getPersonalInfo, getSiteConfig } from "@/lib/api";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { fallbackNavigation, fallbackPersonalInfo, fallbackSiteConfig } from "@/lib/portfolioFallback";
 import type { NavLink, PersonalInfo } from "@/types/portfolio";
@@ -88,6 +89,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <ThemeProvider>
           <a href="#main-content" className="skip-link">Skip to content</a>
           <Navbar navLinks={navLinks} social={personalInfo.social} />
+          <ThemeToggle />
           <main id="main-content" className="min-h-screen pt-16">
             {children}
           </main>

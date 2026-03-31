@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import type { NavLink as NavItem, SocialLink } from "@/types/portfolio";
 
 type NavbarProps = {
@@ -16,6 +15,13 @@ type NavbarProps = {
 type NavigationLinkProps = {
   link: NavItem;
   active: boolean;
+  onClick?: () => void;
+};
+
+type DrawerNavigationLinkProps = {
+  link: NavItem;
+  emphasis: "primary" | "secondary";
+  active?: boolean;
   onClick?: () => void;
 };
 
@@ -30,6 +36,35 @@ function NavigationLink({ link, active, onClick }: NavigationLinkProps) {
       ].join(" ")}
     >
       {link.label}
+    </Link>
+  );
+}
+
+function DrawerNavigationLink({
+  link,
+  emphasis,
+  active = false,
+  onClick,
+}: DrawerNavigationLinkProps) {
+  if (emphasis === "primary") {
+    return (
+      <Link href={link.href} onClick={onClick} className="mobile-nav-primary-link">
+        {link.label}
+      </Link>
+    );
+  }
+
+  return (
+    <Link
+      href={link.href}
+      onClick={onClick}
+      className={[
+        "mobile-nav-secondary-link",
+        active ? "mobile-nav-secondary-link-active" : "",
+      ].join(" ")}
+    >
+      <span>{link.label}</span>
+      <span aria-hidden className="mobile-nav-secondary-link-mark" />
     </Link>
   );
 }
@@ -55,8 +90,10 @@ export function Navbar({ navLinks, social }: NavbarProps) {
 
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const firstLink = mobileMenuRef.current?.querySelector<HTMLAnchorElement>("a");
-    firstLink?.focus();
+    const firstFocusable = mobileMenuRef.current?.querySelector<HTMLElement>(
+      "button, a, [tabindex]:not([tabindex='-1'])",
+    );
+    firstFocusable?.focus();
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -80,7 +117,7 @@ export function Navbar({ navLinks, social }: NavbarProps) {
       <header className="fixed inset-x-0 top-0 z-50 border-b border-border-light/80 bg-[var(--navbar-bg)] backdrop-blur-md">
         <div className="editorial-container flex h-16 items-center justify-between gap-6">
           <Link href="/" className="flex shrink-0 items-center gap-1 font-serif text-xl font-semibold tracking-[-0.02em] text-foreground">
-            <span>havard</span>
+            <span>Håvard</span>
             <span className="text-primary">.</span>
           </Link>
 
@@ -100,8 +137,6 @@ export function Navbar({ navLinks, social }: NavbarProps) {
             ))}
 
             <div className="mx-2 h-6 w-px bg-border-light" />
-
-            <ThemeToggle />
 
             <div className="ml-1 flex items-center gap-3 text-muted">
               {github ? (
@@ -130,7 +165,6 @@ export function Navbar({ navLinks, social }: NavbarProps) {
           </div>
 
           <div className="flex items-center gap-3 lg:hidden">
-            <ThemeToggle />
             <button
               type="button"
               onClick={() => setOpen((value) => !value)}
@@ -145,35 +179,59 @@ export function Navbar({ navLinks, social }: NavbarProps) {
       </header>
 
       {open ? (
-        <div className="fixed inset-0 z-40 lg:hidden">
+        <div className="fixed inset-0 z-[60] lg:hidden">
           <button
             type="button"
             aria-label="Close navigation overlay"
-            className="absolute inset-0 bg-[rgba(20,16,10,0.18)]"
+            className="mobile-nav-backdrop absolute inset-0"
             onClick={() => setOpen(false)}
           />
 
           <div
             ref={mobileMenuRef}
-            className="absolute right-0 top-0 h-full w-[min(22rem,90vw)] border-l border-border bg-background px-6 pb-8 pt-20 shadow-[0_20px_60px_rgba(20,16,10,0.18)]"
+            className="mobile-nav-sheet absolute right-0 top-0 flex h-full w-[min(24rem,92vw)] flex-col px-5 pb-6 pt-6 sm:px-6"
           >
-            <div className="space-y-8">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="section-kicker">Menu</p>
+                <p className="mt-3 font-serif text-3xl leading-none tracking-[-0.03em] text-foreground">
+                  Navigate
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="Close navigation menu"
+                className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-surface text-copy hover:border-primary hover:text-primary"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="mt-8 flex flex-1 flex-col">
               <div>
                 <p className="section-kicker">Navigate</p>
-                <div className="mt-4 space-y-2">
+                <div className="mt-5 space-y-1">
                   {primaryLinks.map((link) => (
-                    <NavigationLink key={link.href} link={link} active={false} onClick={() => setOpen(false)} />
+                    <DrawerNavigationLink
+                      key={link.href}
+                      link={link}
+                      emphasis="primary"
+                      onClick={() => setOpen(false)}
+                    />
                   ))}
                 </div>
               </div>
 
-              <div>
+              <div className="mt-8">
                 <p className="section-kicker">Detail Pages</p>
-                <div className="mt-4 space-y-2">
+                <div className="mt-5 space-y-3">
                   {secondaryLinks.map((link) => (
-                    <NavigationLink
+                    <DrawerNavigationLink
                       key={link.href}
                       link={link}
+                      emphasis="secondary"
                       active={pathname === link.href}
                       onClick={() => setOpen(false)}
                     />
@@ -181,29 +239,34 @@ export function Navbar({ navLinks, social }: NavbarProps) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 text-muted">
-                {github ? (
-                  <Link
-                    href={github.url}
-                    aria-label={github.label}
-                    className="transition-colors duration-200 hover:text-primary"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <FaGithub className="h-5 w-5" />
-                  </Link>
-                ) : null}
-                {linkedin ? (
-                  <Link
-                    href={linkedin.url}
-                    aria-label={linkedin.label}
-                    className="transition-colors duration-200 hover:text-primary"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <FaLinkedin className="h-5 w-5" />
-                  </Link>
-                ) : null}
+              <div className="mobile-nav-utility">
+                <div className="flex items-center justify-between gap-4">
+                  <p className="section-kicker">Elsewhere</p>
+                  <div className="flex items-center gap-3">
+                    {github ? (
+                      <Link
+                        href={github.url}
+                        aria-label={github.label}
+                        className="mobile-nav-social-link"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <FaGithub className="h-[18px] w-[18px]" />
+                      </Link>
+                    ) : null}
+                    {linkedin ? (
+                      <Link
+                        href={linkedin.url}
+                        aria-label={linkedin.label}
+                        className="mobile-nav-social-link"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <FaLinkedin className="h-[18px] w-[18px]" />
+                      </Link>
+                    ) : null}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
