@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: portfolio-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    rootDir: backend
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    autoDeployTrigger: commit
+    healthCheckPath: /healthz
+    envVars:
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+      - key: Portfolio__SiteUrl
+        sync: false

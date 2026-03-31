@@ -30,6 +30,8 @@ portfolio/
 │   ├── Controllers/                 # REST controllers (single PortfolioController)
 │   ├── Models/                      # Shared DTO/record definitions
 │   ├── Services/                    # In-memory data provider
+│   ├── tests/                       # Backend xUnit tests
+│   ├── Dockerfile                   # Production container image for Render/Azure/etc.
 │   └── Portfolio.Api.csproj         # .NET project file
 ├── my-portfolio/                    # Next.js 15 frontend application
 │   ├── src/
@@ -107,6 +109,7 @@ The site URL returned from the backend is configured via `Portfolio:SiteUrl` in 
 - `dotnet run` (from `backend/`) – Start the ASP.NET Core API
 - `dotnet build` – Compile the backend project
 - `dotnet test backend/tests/Portfolio.Api.Tests/Portfolio.Api.Tests.csproj` – Run backend xUnit tests
+- `docker build -t portfolio-api ./backend` – Build the backend container image
 
 **Frontend**
 - `npm run dev` – Start the Next.js dev server with Turbopack
@@ -129,6 +132,9 @@ The backend exposes the following JSON endpoints under `/api/portfolio`:
 - `/skills` – Skill matrix
 - `/courses` – Course catalogue with credits/grades
 
+Operational endpoint:
+- `/healthz` – Lightweight health check for Render and other hosts
+
 ## 🎯 Pages
 
 - **Homepage** (`/`) - Hero section, featured projects, and contact
@@ -149,10 +155,48 @@ The frontend can be deployed on [Vercel](https://vercel.com/), but the ASP.NET C
 
 Vercel does not run the ASP.NET Core backend folder for you. If the backend URL is missing or unreachable, the frontend now fails clearly instead of serving a second copy of the portfolio data.
 
-Alternative deployment platforms:
-- [Netlify](https://netlify.com)
-- [Railway](https://railway.app)
+### Backend on Render
+
+The repository now includes `backend/Dockerfile`, so the easiest low-cost deployment path is a Docker-based Render web service.
+
+1. Push the repo to GitHub.
+2. In Render, create a new `Blueprint` from the repository root.
+3. Render will detect [render.yaml](/Users/havardvestbo/Dokumenter/Projects/Portfolio/portfolio/render.yaml) and create the `portfolio-api` web service from it.
+4. During the first Blueprint setup, provide values for the `sync: false` environment variables:
+   - `CORS_ALLOWED_ORIGINS=https://your-vercel-project.vercel.app,https://your-domain.com`
+   - `Portfolio__SiteUrl=https://your-domain.com`
+5. Create the Blueprint and let Render deploy the backend.
+6. Copy the deployed backend URL from Render, for example `https://portfolio-api.onrender.com`.
+7. In the Vercel project for `my-portfolio/`, set:
+   - `PORTFOLIO_API_BASE_URL=https://portfolio-api.onrender.com`
+8. Redeploy the frontend on Vercel.
+
+The Docker image binds to Render's injected `PORT` automatically, and the Blueprint uses `/healthz` as the service health check.
+
+The default Blueprint settings are:
+- `plan: free`
+- `region: frankfurt`
+- `rootDir: backend`
+
+If you want a permanently warm backend, change `plan` in [render.yaml](/Users/havardvestbo/Dokumenter/Projects/Portfolio/portfolio/render.yaml) before importing the Blueprint.
+
+For local Docker testing:
+
+```bash
+docker build -t portfolio-api ./backend
+docker run --rm \
+  -p 5000:8080 \
+  -e CORS_ALLOWED_ORIGINS=http://localhost:3000 \
+  -e Portfolio__SiteUrl=http://localhost:3000 \
+  portfolio-api
+```
+
+Render is a good hobby option, but its free web service spins down when idle. If you want the backend to stay warm and respond consistently, use a paid Render plan or Azure App Service instead.
+
+Alternative backend platforms:
 - [Render](https://render.com)
+- [Railway](https://railway.app)
+- [Azure App Service](https://azure.microsoft.com/products/app-service/)
 
 ## 📄 License
 
