@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CardSurface } from "@/components/CardSurface";
 import { PageTransition } from "@/components/PageTransition";
 import { TechChips } from "@/components/TechChips";
 import { getCourses } from "@/lib/api";
@@ -91,7 +92,7 @@ function CourseList({ courses }: { courses: Course[] }) {
         const credits = formatCredits(course.credits);
 
         return (
-          <li key={course.id} className="card card-hover p-5">
+          <CardSurface as="li" key={course.id} hover className="p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="mb-2 flex items-center gap-2">
@@ -121,7 +122,7 @@ function CourseList({ courses }: { courses: Course[] }) {
                 <TechChips items={course.topics} max={6} />
               </div>
             )}
-          </li>
+          </CardSurface>
         );
       })}
     </ul>
@@ -172,24 +173,24 @@ export default async function CoursesPage() {
 
         <section>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="card p-5">
+            <CardSurface className="p-5">
               <div className="text-2xl font-bold text-primary">{bachelorCourses.length}</div>
               <div className="text-sm text-muted">Bachelor Courses</div>
-            </div>
-            <div className="card p-5">
+            </CardSurface>
+            <CardSurface className="p-5">
               <div className="text-2xl font-bold text-primary">{masterCourses.length}</div>
               <div className="text-sm text-muted">Master Courses</div>
-            </div>
-            <div className="card p-5">
+            </CardSurface>
+            <CardSurface className="p-5">
               <div className="text-2xl font-bold text-primary">{totalECTS}</div>
               <div className="text-sm text-muted">Total ECTS</div>
-            </div>
-            <div className="card p-5">
+            </CardSurface>
+            <CardSurface className="p-5">
               <div className="text-2xl font-bold text-primary">
                 {weightedAverage ? weightedAverage.toFixed(2) : "-"}
               </div>
               <div className="text-sm text-muted">ECTS-weighted average (A=5 to F=0)</div>
-            </div>
+            </CardSurface>
           </div>
         </section>
 
@@ -208,7 +209,7 @@ export default async function CoursesPage() {
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {Object.entries(coursesByCategory).map(([category, entries]) =>
               entries && entries.length > 0 ? (
-                <div key={category} className="card p-5">
+                <CardSurface key={category} className="p-5">
                   <h3 className="mb-3 text-lg font-medium capitalize">
                     {category.replace(/([A-Z])/g, " $1").trim()}
                   </h3>
@@ -230,7 +231,7 @@ export default async function CoursesPage() {
                       );
                     })}
                   </div>
-                </div>
+                </CardSurface>
               ) : null
             )}
           </div>

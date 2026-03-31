@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CardSurface } from "@/components/CardSurface";
 import { PageTransition, StaggerContainer, StaggerItem } from "@/components/PageTransition";
 import { getProjects } from "@/lib/api";
 import type { Project } from "@/types/portfolio";
@@ -87,10 +88,11 @@ export default async function ProjectsPage() {
         <StaggerContainer className="grid gap-6 md:grid-cols-2">
           {projects.map((project) => (
             <StaggerItem key={project.id}>
-              <article
-                className={`card card-hover group p-6 ${
-                  project.featured ? "card-featured" : ""
-                }`}
+              <CardSurface
+                as="article"
+                hover
+                featured={project.featured}
+                className="group p-6"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -126,7 +128,7 @@ export default async function ProjectsPage() {
                 )}
 
                 <ProjectLinks project={project} />
-              </article>
+              </CardSurface>
             </StaggerItem>
           ))}
         </StaggerContainer>

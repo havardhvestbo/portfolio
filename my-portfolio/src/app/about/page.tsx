@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CardSurface } from "@/components/CardSurface";
 import { getPersonalInfo } from "@/lib/api";
 import { PageTransition } from "@/components/PageTransition";
 import type { PersonalInfo } from "@/types/portfolio";
@@ -52,10 +53,10 @@ export default async function AboutPage() {
       <section>
         <h3 className="text-xl font-semibold">What I Value</h3>
         <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-          <li className="card p-4">Teamwork and knowledge sharing</li>
-          <li className="card p-4">Clear, maintainable code</li>
-          <li className="card p-4">User-first, accessible design</li>
-          <li className="card p-4">Solving real problems, not just “cool” ones</li>
+          <CardSurface as="li" className="p-4">Teamwork and knowledge sharing</CardSurface>
+          <CardSurface as="li" className="p-4">Clear, maintainable code</CardSurface>
+          <CardSurface as="li" className="p-4">User-first, accessible design</CardSurface>
+          <CardSurface as="li" className="p-4">Solving real problems, not just “cool” ones</CardSurface>
         </ul>
       </section>
 

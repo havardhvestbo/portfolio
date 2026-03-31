@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CardSurface } from "@/components/CardSurface";
 import { PageTransition } from "@/components/PageTransition";
 import { getEducation, getExperiences, getSkills } from "@/lib/api";
 import type { Education, Experience, Skill } from "@/types/portfolio";
@@ -16,26 +17,21 @@ function ExperienceCard({ experience }: { experience: Experience }) {
   const isBouvet = experience.id === "bouvet-asa";
 
   return (
-    <div
-      className={`rounded-2xl border p-6 transition-all ${
-        isBouvet
-          ? "border-primary/30 bg-primary/5 shadow-[0_0_30px_-15px_var(--color-glow)] ring-1 ring-primary/20"
-          : "border-overlay-border"
-      }`}
-    >
+    <CardSurface hover featured={isBouvet} className="p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-full border border-overlay-border bg-overlay-bg px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.14em] text-overlay-text-muted">
+              {experience.type}
+            </span>
             <h3 className="text-xl font-semibold">{experience.title}</h3>
             {isBouvet && (
-              <span className="rounded-full bg-primary/20 px-2 py-1 text-xs font-medium text-primary">
+              <span className="rounded-full bg-primary/16 px-2 py-1 text-xs font-medium text-primary">
                 Featured
               </span>
             )}
           </div>
-          <p className={isBouvet ? "font-medium text-primary" : "text-primary"}>
-            {experience.company}
-          </p>
+          <p className="mt-2 text-primary">{experience.company}</p>
         </div>
         <span className="text-sm text-overlay-text-muted">{experience.period}</span>
       </div>
@@ -50,7 +46,7 @@ function ExperienceCard({ experience }: { experience: Experience }) {
               className={`rounded-lg border px-2 py-1 text-xs ${
                 isBouvet
                   ? "border-primary/20 bg-primary/10 text-primary"
-                  : "border-overlay-border bg-overlay-bg"
+                  : "border-overlay-border bg-overlay-bg text-overlay-text"
               }`}
             >
               {technology}
@@ -58,13 +54,13 @@ function ExperienceCard({ experience }: { experience: Experience }) {
           ))}
         </div>
       )}
-    </div>
+    </CardSurface>
   );
 }
 
 function EducationCard({ education }: { education: Education }) {
   return (
-    <div className="card card-hover p-6">
+    <CardSurface hover className="p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h3 className="text-xl font-semibold">{education.degree}</h3>
@@ -80,7 +76,7 @@ function EducationCard({ education }: { education: Education }) {
       {education.gpa && (
         <p className="mt-2 text-sm text-muted">GPA: {education.gpa}</p>
       )}
-    </div>
+    </CardSurface>
   );
 }
 
@@ -143,7 +139,7 @@ export default async function CVPage() {
           <h2 className="mb-6 text-2xl font-semibold">Skills</h2>
           <div className="grid gap-6 md:grid-cols-2">
             {Object.entries(groupedSkills).map(([category, categorySkills]) => (
-              <div key={category} className="card p-6">
+              <CardSurface key={category} className="p-6">
                 <h3 className="mb-3 text-lg font-semibold">
                   {formatCategoryLabel(category)}
                 </h3>
@@ -160,7 +156,7 @@ export default async function CVPage() {
                     </span>
                   ))}
                 </div>
-              </div>
+              </CardSurface>
             ))}
 
             {skills.length === 0 && (

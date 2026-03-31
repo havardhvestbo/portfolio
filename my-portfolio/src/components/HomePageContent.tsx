@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { CardSurface } from "@/components/CardSurface";
 import { FolderGit2, FileText, Mail } from "lucide-react";
 import { TechMarquee } from "@/components/TechMarquee";
 import type { Experience, PersonalInfo, Project } from "@/types/portfolio";
@@ -204,17 +205,18 @@ export function HomePageContent({ personalInfo, featuredProjects, experiences }:
             <motion.li
               key={highlight.id}
               variants={card}
-              className="card p-5"
             >
-              <span className="text-xs uppercase tracking-wide text-overlay-text-muted">
-                {highlight.kind}
-              </span>
-              <h3 className="mt-1 text-lg font-semibold text-foreground">
-                {highlight.title}
-              </h3>
-              <p className="mt-2 text-muted text-sm leading-relaxed">
-                {highlight.description}
-              </p>
+              <CardSurface className="p-5">
+                <span className="text-xs uppercase tracking-wide text-overlay-text-muted">
+                  {highlight.kind}
+                </span>
+                <h3 className="mt-1 text-lg font-semibold text-foreground">
+                  {highlight.title}
+                </h3>
+                <p className="mt-2 text-muted text-sm leading-relaxed">
+                  {highlight.description}
+                </p>
+              </CardSurface>
             </motion.li>
           ))}
         </motion.ul>
