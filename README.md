@@ -177,6 +177,8 @@ The default Blueprint settings are:
 - `plan: free`
 - `region: frankfurt`
 - `rootDir: backend`
+- `dockerfilePath: ./Dockerfile`
+- `dockerContext: .`
 
 If you want a permanently warm backend, change `plan` in [render.yaml](/Users/havardvestbo/Dokumenter/Projects/Portfolio/portfolio/render.yaml) before importing the Blueprint.
 
