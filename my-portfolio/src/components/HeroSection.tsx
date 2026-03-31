@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ProfileFrame } from "@/components/ProfileFrame";
-import { TechPill } from "@/components/ui/TechPill";
+import { TechMarquee } from "@/components/TechMarquee";
 import { fadeUpVariants, fadeUpTransition, scaleInVariants } from "@/lib/animations";
 import type { PersonalInfo } from "@/types/portfolio";
 
@@ -15,9 +15,12 @@ export function HeroSection({ personalInfo }: HeroSectionProps) {
   const titleParts = ["Håvard", "Developer", "Technologist"];
 
   return (
-    <section className="hero-diagonals editorial-section relative flex min-h-screen items-center pt-28" id="top">
-      <div className="editorial-container relative z-10 grid items-center gap-16 lg:grid-cols-[minmax(0,0.6fr)_minmax(320px,0.4fr)]">
-        <div className="max-w-[35rem]">
+    <section
+      className="hero-diagonals relative flex min-h-[calc(100svh-4rem)] items-center overflow-hidden pt-3 md:pt-5"
+      id="top"
+    >
+      <div className="hero-layout mx-auto grid w-full max-w-[1440px] items-center gap-14 px-6 pb-28 lg:grid-cols-[minmax(0,0.66fr)_minmax(340px,0.34fr)] lg:px-20 2xl:max-w-[1560px]">
+        <div className="max-w-[46rem]">
           <motion.div
             variants={fadeUpVariants}
             initial="initial"
@@ -34,7 +37,7 @@ export function HeroSection({ personalInfo }: HeroSectionProps) {
               initial="initial"
               animate="animate"
               transition={{ ...fadeUpTransition, delay: 0.1 }}
-              className="font-serif text-5xl font-normal leading-[1.05] tracking-[-0.02em] text-foreground md:text-6xl lg:text-[3.5rem]"
+              className="font-serif text-5xl font-normal leading-[1.03] tracking-[-0.03em] text-foreground md:text-6xl lg:text-[4.25rem] xl:text-[4.75rem]"
             >
               {titleParts[0]}
             </motion.h1>
@@ -43,7 +46,7 @@ export function HeroSection({ personalInfo }: HeroSectionProps) {
               initial="initial"
               animate="animate"
               transition={{ ...fadeUpTransition, delay: 0.18 }}
-              className="font-serif text-5xl font-normal italic leading-[1.05] tracking-[-0.02em] text-primary md:text-6xl lg:text-[3.5rem]"
+              className="font-serif text-5xl font-normal italic leading-[1.03] tracking-[-0.03em] text-primary md:text-6xl lg:text-[4.25rem] xl:text-[4.75rem]"
             >
               {titleParts[1]} <span className="not-italic text-muted">&amp;</span>
             </motion.p>
@@ -52,7 +55,7 @@ export function HeroSection({ personalInfo }: HeroSectionProps) {
               initial="initial"
               animate="animate"
               transition={{ ...fadeUpTransition, delay: 0.26 }}
-              className="font-serif text-5xl font-normal leading-[1.05] tracking-[-0.02em] text-copy md:text-6xl lg:text-[3.5rem]"
+              className="font-serif text-5xl font-normal leading-[1.03] tracking-[-0.03em] text-copy md:text-6xl lg:text-[4.25rem] xl:text-[4.75rem]"
             >
               {titleParts[2]}
             </motion.p>
@@ -63,7 +66,7 @@ export function HeroSection({ personalInfo }: HeroSectionProps) {
             initial="initial"
             animate="animate"
             transition={{ ...fadeUpTransition, delay: 0.34 }}
-            className="mt-8 max-w-[28rem] text-[1.0625rem] leading-8 text-copy"
+            className="mt-8 max-w-[36rem] text-[1.125rem] leading-8 text-copy"
           >
             {personalInfo.description}
           </motion.p>
@@ -81,20 +84,6 @@ export function HeroSection({ personalInfo }: HeroSectionProps) {
             <Link href="/#contact" className="editorial-button-secondary">
               Get in touch
             </Link>
-          </motion.div>
-
-          <motion.div
-            variants={fadeUpVariants}
-            initial="initial"
-            animate="animate"
-            transition={{ ...fadeUpTransition, delay: 0.5 }}
-            className="mt-12 border-t border-[var(--border-light)] pt-8"
-          >
-            <div className="flex flex-wrap gap-2.5">
-              {personalInfo.technologies.map((technology) => (
-                <TechPill key={technology}>{technology}</TechPill>
-              ))}
-            </div>
           </motion.div>
         </div>
 
@@ -121,11 +110,15 @@ export function HeroSection({ personalInfo }: HeroSectionProps) {
       <a
         href="#about"
         aria-label="Scroll to About section"
-        className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-[11px] uppercase tracking-[0.1em] text-muted"
+        className="hero-scroll-indicator absolute bottom-20 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-[11px] uppercase tracking-[0.1em] text-muted"
       >
         <span>Scroll</span>
         <span className="h-8 w-px bg-[linear-gradient(180deg,var(--text-muted),transparent)]" />
       </a>
+
+      <div className="absolute inset-x-0 bottom-0 z-10 border-t border-border-light bg-background/90 backdrop-blur-sm">
+        <TechMarquee items={personalInfo.technologies} className="mx-auto max-w-[1560px] px-4 lg:px-10" />
+      </div>
     </section>
   );
 }

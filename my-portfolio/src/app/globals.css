@@ -314,8 +314,8 @@ button {
   opacity: 0.3;
 }
 
-.hero-diagonals .editorial-container::before,
-.hero-diagonals .editorial-container::after {
+.hero-diagonals .hero-layout::before,
+.hero-diagonals .hero-layout::after {
   content: "";
   position: absolute;
   border-radius: 9999px;
@@ -324,18 +324,41 @@ button {
   z-index: -1;
 }
 
-.hero-diagonals .editorial-container::before {
+.hero-diagonals .hero-layout::before {
   inset: 2rem auto auto -6rem;
   height: 16rem;
   width: 16rem;
   background: color-mix(in srgb, var(--accent) 16%, transparent);
 }
 
-.hero-diagonals .editorial-container::after {
+.hero-diagonals .hero-layout::after {
   inset: auto -4rem -1rem auto;
   height: 18rem;
   width: 18rem;
   background: color-mix(in srgb, var(--accent-light) 14%, transparent);
+}
+
+.hero-layout {
+  position: relative;
+}
+
+.hero-scroll-indicator {
+  display: flex;
+}
+
+.marquee-track {
+  animation: marquee-scroll 28s linear infinite;
+  will-change: transform;
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
 
 .profile-frame {
@@ -389,6 +412,18 @@ button {
   }
 }
 
+@media (max-height: 840px) {
+  .hero-scroll-indicator {
+    display: none;
+  }
+}
+
+@media (max-width: 1023px) {
+  .hero-scroll-indicator {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -407,5 +442,10 @@ button {
 
   .grain-shell::after {
     opacity: 0.02;
+  }
+
+  .marquee-track {
+    animation: none;
+    transform: none;
   }
 }
