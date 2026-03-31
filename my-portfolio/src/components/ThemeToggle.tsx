@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
-import { Sun, Moon, Monitor } from "lucide-react";
+import { Moon, Monitor, Sun } from "lucide-react";
+import { useTheme } from "./ThemeProvider";
 
 const modes = ["system", "light", "dark"] as const;
 
@@ -10,24 +10,27 @@ export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   if (!mounted) {
     return <div className="h-8 w-8" />;
   }
 
-  const cycle = () => {
-    const idx = modes.indexOf(theme as (typeof modes)[number]);
-    setTheme(modes[(idx + 1) % modes.length]);
+  const cycleTheme = () => {
+    const currentIndex = modes.indexOf(theme);
+    setTheme(modes[(currentIndex + 1) % modes.length]);
   };
 
   const Icon = theme === "light" ? Sun : theme === "dark" ? Moon : Monitor;
 
   return (
     <button
-      onClick={cycle}
+      type="button"
+      onClick={cycleTheme}
       aria-label={`Theme: ${theme}`}
-      className="rounded-lg p-1.5 text-muted hover:text-foreground hover:bg-overlay-bg-hover transition"
+      className="rounded-lg p-1.5 text-muted transition hover:bg-overlay-bg-hover hover:text-foreground"
     >
       <Icon className="h-4 w-4" />
     </button>
