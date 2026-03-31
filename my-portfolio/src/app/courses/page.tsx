@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import { TechChips } from "@/components/TechChips";
 import { getCourses } from "@/lib/api";
+import { PageTransition } from "@/components/PageTransition";
 import type { Course, CourseCategory, CourseLevel, CourseSemester } from "@/types/portfolio";
+
+export const metadata: Metadata = {
+  title: "Courses",
+  description: "Academic coursework from Håvard's Bachelor's and Master's degrees.",
+};
 
 type CoursesByCategory = Partial<Record<CourseCategory, Course[]>>;
 
@@ -62,9 +69,12 @@ export default async function CoursesPage() {
 
   if (courses.length === 0) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 text-center py-20">
         <h1 className="text-3xl font-bold">Courses</h1>
-        <p className="text-white/70">Course information is unavailable at the moment.</p>
+        <p className="text-muted">Course information is unavailable at the moment.</p>
+        <a href="/courses" className="inline-block mt-2 px-5 py-2.5 rounded-xl bg-primary text-primary-contrast font-medium hover:opacity-90 transition">
+          Try again
+        </a>
       </div>
     );
   }
@@ -102,8 +112,17 @@ export default async function CoursesPage() {
             <div className="text-2xl font-bold text-primary">
               {weightedAvg ? weightedAvg.toFixed(2) : "—"}
             </div>
-            <div className="text-sm text-white/70">
-              ECTS‑weighted average (A=5…F=0)
+            <div className="rounded-2xl border border-overlay-border p-5">
+              <div className="text-2xl font-bold text-primary">{totalECTS}</div>
+              <div className="text-sm text-muted">Total ECTS</div>
+            </div>
+            <div className="rounded-2xl border border-overlay-border p-5">
+              <div className="text-2xl font-bold text-primary">
+                {weightedAvg ? weightedAvg.toFixed(2) : "—"}
+              </div>
+              <div className="text-sm text-muted">
+                ECTS‑weighted average (A=5…F=0)
+              </div>
             </div>
           </div>
         </div>
@@ -127,18 +146,11 @@ export default async function CoursesPage() {
                       </span>
                     )}
                   </div>
-                  <h3 className="text-lg font-medium group-hover:text-primary">{course.title}</h3>
-                  <p className="text-sm text-primary">{course.institution}</p>
                 </div>
-                <div className="text-right text-sm text-white/70">
-                  <div>{formatSemester(course.semester, course.year)}</div>
-                  <div>{formatCredits(course.credits)}</div>
-                </div>
-              </div>
 
-              {course.description && (
-                <p className="mt-2 text-sm text-white/70">{course.description}</p>
-              )}
+                {course.description && (
+                  <p className="mt-2 text-sm text-muted">{course.description}</p>
+                )}
 
               {course.topics && course.topics.length > 0 && (
                 <div className="mt-3">
@@ -168,18 +180,11 @@ export default async function CoursesPage() {
                       </span>
                     )}
                   </div>
-                  <h3 className="text-lg font-medium group-hover:text-primary">{course.title}</h3>
-                  <p className="text-sm text-primary">{course.institution}</p>
                 </div>
-                <div className="text-right text-sm text-white/70">
-                  <div>{formatSemester(course.semester, course.year)}</div>
-                  <div>{formatCredits(course.credits)}</div>
-                </div>
-              </div>
 
-              {course.description && (
-                <p className="mt-2 text-sm text-white/70">{course.description}</p>
-              )}
+                {course.description && (
+                  <p className="mt-2 text-sm text-muted">{course.description}</p>
+                )}
 
               {course.topics && course.topics.length > 0 && (
                 <div className="mt-3">
@@ -207,14 +212,14 @@ export default async function CoursesPage() {
                       <div className="text-white/50 text-xs">
                         {course.code} • {formatSemester(course.semester, course.year)}
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ) : null
-          )}
-        </div>
-      </section>
-    </div>
+              ) : null
+            )}
+          </div>
+        </section>
+      </div>
+    </PageTransition>
   );
 }
