@@ -86,19 +86,19 @@ export default async function CoursesPage() {
 
       <section>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-2xl border border-white/10 p-5">
+          <div className="card p-5">
             <div className="text-2xl font-bold text-primary">{bachelorCourses.length}</div>
             <div className="text-sm text-white/70">Bachelor Courses</div>
           </div>
-          <div className="rounded-2xl border border-white/10 p-5">
+          <div className="card p-5">
             <div className="text-2xl font-bold text-primary">{masterCourses.length}</div>
             <div className="text-sm text-white/70">Master Courses</div>
           </div>
-          <div className="rounded-2xl border border-white/10 p-5">
+          <div className="card p-5">
             <div className="text-2xl font-bold text-primary">{totalECTS}</div>
             <div className="text-sm text-white/70">Total ECTS</div>
           </div>
-          <div className="rounded-2xl border border-white/10 p-5">
+          <div className="card p-5">
             <div className="text-2xl font-bold text-primary">
               {weightedAvg ? weightedAvg.toFixed(2) : "—"}
             </div>
@@ -115,7 +115,7 @@ export default async function CoursesPage() {
           {bachelorCourses.map((course) => (
             <li
               key={course.id}
-              className="group rounded-2xl border border-white/10 p-5 hover:border-white/20 hover:shadow-[0_0_30px_-15px_rgba(250,204,21,0.45)] transition"
+              className="card card-hover group p-5"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -156,7 +156,7 @@ export default async function CoursesPage() {
           {masterCourses.map((course) => (
             <li
               key={course.id}
-              className="group rounded-2xl border border-white/10 p-5 hover:border-white/20 hover:shadow-[0_0_30px_-15px_rgba(250,204,21,0.45)] transition"
+              className="card card-hover group p-5"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -196,7 +196,7 @@ export default async function CoursesPage() {
         <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {Object.entries(coursesByCategory).map(([category, entries]) =>
             entries && entries.length > 0 ? (
-              <div key={category} className="rounded-2xl border border-white/10 p-5">
+              <div key={category} className="card p-5">
                 <h3 className="text-lg font-medium capitalize mb-3">
                   {category.replace(/([A-Z])/g, " $1").trim()}
                 </h3>

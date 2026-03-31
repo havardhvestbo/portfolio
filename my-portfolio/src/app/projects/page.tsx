@@ -33,7 +33,7 @@ export default async function ProjectsPage() {
         {projects.map((project) => (
           <article
             key={project.id}
-            className="group rounded-2xl border border-white/10 p-6 hover:border-white/20 hover:shadow-[0_0_30px_-15px_rgba(250,204,21,0.45)] transition"
+            className="card card-hover group p-6"
           >
             <div className="flex items-start justify-between">
               <h2 className="text-xl font-semibold group-hover:text-primary">

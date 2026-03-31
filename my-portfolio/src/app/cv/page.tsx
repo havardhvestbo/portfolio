@@ -39,10 +39,10 @@ export default async function CVPage() {
             return (
               <div
                 key={exp.id}
-                className={`rounded-2xl border p-6 transition-all ${
+                className={`card p-6 ${
                   isBouvet
-                    ? "border-primary/30 bg-primary/5 shadow-[0_0_30px_-15px_rgba(250,204,21,0.3)] ring-1 ring-primary/20"
-                    : "border-white/10"
+                    ? "!border-primary/30 !bg-primary/5 !shadow-[0_0_30px_-15px_rgba(250,204,21,0.3)] ring-1 ring-primary/20"
+                    : "card-hover"
                 }`}
               >
                 <div className="flex items-start justify-between">
@@ -94,7 +94,7 @@ export default async function CVPage() {
           {education.map((edu) => (
             <div
               key={edu.id}
-              className="rounded-2xl border border-white/10 p-6"
+              className="card p-6"
             >
               <div className="flex items-start justify-between">
                 <div>
@@ -124,7 +124,7 @@ export default async function CVPage() {
           {Object.entries(groupedSkills).map(([category, categorySkills]) => (
             <div
               key={category}
-              className="rounded-2xl border border-white/10 p-6"
+              className="card p-6"
             >
               <h3 className="text-lg font-semibold capitalize mb-3">
                 {category.replace(/([A-Z])/g, " $1").trim()}
