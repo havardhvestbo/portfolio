@@ -85,6 +85,15 @@ export function Navbar({ navLinks, social }: NavbarProps) {
     [navLinks],
   );
 
+  const openMenu = () => {
+    setIsVisible(true);
+    setOpen(true);
+  };
+
+  const closeMenu = () => {
+    setOpen(false);
+  };
+
   useEffect(() => {
     if (!open) {
       return;
@@ -102,7 +111,7 @@ export function Navbar({ navLinks, social }: NavbarProps) {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setOpen(false);
+        closeMenu();
       }
     };
 
@@ -153,12 +162,6 @@ export function Navbar({ navLinks, social }: NavbarProps) {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  useEffect(() => {
-    if (open) {
-      setIsVisible(true);
-    }
-  }, [open]);
 
   const github = social.github;
   const linkedin = social.linkedin;
@@ -231,7 +234,7 @@ export function Navbar({ navLinks, social }: NavbarProps) {
             ) : (
               <button
                 type="button"
-                onClick={() => setOpen(true)}
+                onClick={openMenu}
                 aria-expanded={false}
                 aria-label="Open navigation menu"
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-copy hover:border-primary hover:text-primary"
@@ -249,7 +252,7 @@ export function Navbar({ navLinks, social }: NavbarProps) {
             type="button"
             aria-label="Close navigation overlay"
             className="mobile-nav-backdrop fixed inset-0 z-0"
-            onClick={() => setOpen(false)}
+            onClick={closeMenu}
           />
 
           <div
@@ -269,7 +272,7 @@ export function Navbar({ navLinks, social }: NavbarProps) {
 
               <button
                 type="button"
-                onClick={() => setOpen(false)}
+                onClick={closeMenu}
                 aria-label="Close navigation menu"
                 className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-surface text-copy hover:border-primary hover:text-primary"
               >
@@ -286,7 +289,7 @@ export function Navbar({ navLinks, social }: NavbarProps) {
                       key={link.href}
                       link={link}
                       emphasis="primary"
-                      onClick={() => setOpen(false)}
+                      onClick={closeMenu}
                     />
                   ))}
                 </div>
@@ -301,7 +304,7 @@ export function Navbar({ navLinks, social }: NavbarProps) {
                       link={link}
                       emphasis="secondary"
                       active={pathname === link.href}
-                      onClick={() => setOpen(false)}
+                      onClick={closeMenu}
                     />
                   ))}
                 </div>
