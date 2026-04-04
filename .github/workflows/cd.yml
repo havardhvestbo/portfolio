@@ -1,0 +1,18 @@
+name: CD
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Trigger Render deploy
+        run: curl -sf -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+
+  # Frontend deployment is handled automatically by Vercel's GitHub integration.
+  # Connect your repo to Vercel via the Vercel dashboard — no workflow needed.
