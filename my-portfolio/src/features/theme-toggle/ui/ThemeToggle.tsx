@@ -1,7 +1,7 @@
 "use client";
 
 import { Monitor, Moon, Sun, type LucideIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 
 type ThemeChoice = "light" | "dark" | "system";
@@ -19,36 +19,42 @@ function getNextTheme(theme: ThemeChoice) {
   return THEME_ORDER[(currentIndex + 1) % THEME_ORDER.length];
 }
 
+function subscribeToMobileNavState(callback: () => void) {
+  if (typeof document === "undefined") {
+    return () => {};
+  }
+
+  const observer = new MutationObserver(callback);
+  observer.observe(document.body, {
+    attributes: true,
+    attributeFilter: ["data-mobile-nav-open"],
+  });
+
+  return () => {
+    observer.disconnect();
+  };
+}
+
+function getMobileNavOpenSnapshot() {
+  if (typeof document === "undefined") {
+    return false;
+  }
+
+  return document.body.dataset.mobileNavOpen === "true";
+}
+
 export function ThemeToggle() {
   const { resolvedTheme, setTheme, theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) {
-      return;
-    }
-
-    const syncMobileNavState = () => {
-      setMobileNavOpen(document.body.dataset.mobileNavOpen === "true");
-    };
-
-    syncMobileNavState();
-
-    const observer = new MutationObserver(syncMobileNavState);
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ["data-mobile-nav-open"],
-    });
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [mounted]);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+  const mobileNavOpen = useSyncExternalStore(
+    subscribeToMobileNavState,
+    getMobileNavOpenSnapshot,
+    () => false,
+  );
 
   if (!mounted) {
     return (

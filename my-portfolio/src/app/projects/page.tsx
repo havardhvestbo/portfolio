@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getProjects } from "@/entities/portfolio/api/portfolio-api";
+import { getProjects, loadPortfolioData } from "@/entities/portfolio/api/portfolio-api";
 import { ProjectCard } from "@/entities/project/ui/ProjectCard";
 import { PageTransition, StaggerContainer, StaggerItem } from "@/shared/ui/PageTransition";
 import { SectionHeading } from "@/shared/ui/SectionHeading";
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ProjectsPage() {
-  const projects = await getProjects();
+  const projects = await loadPortfolioData("projects page data", () => getProjects(), []);
 
   if (projects.length === 0) {
     return (

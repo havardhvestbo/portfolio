@@ -19,21 +19,30 @@ vi.mock("framer-motion", () => ({
     {},
     {
       get: () =>
-        ({
-          children,
-          variants,
-          initial,
-          animate,
-          transition,
-          whileHover,
-          ...props
-        }: ComponentProps<"div"> & {
+        ({ children, ...props }: ComponentProps<"div"> & {
           variants?: unknown;
           initial?: unknown;
           animate?: unknown;
           transition?: unknown;
           whileHover?: unknown;
-        }) => <div {...props}>{children}</div>,
+        }) => {
+          const {
+            variants,
+            initial,
+            animate,
+            transition,
+            whileHover,
+            ...divProps
+          } = props;
+
+          void variants;
+          void initial;
+          void animate;
+          void transition;
+          void whileHover;
+
+          return <div {...divProps}>{children}</div>;
+        },
     },
   ),
 }));

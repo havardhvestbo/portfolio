@@ -1,4 +1,6 @@
-import { getPortfolioSnapshot } from "@/entities/portfolio/api/portfolio-api";
+import { getPortfolioSnapshot, loadPortfolioData } from "@/entities/portfolio/api/portfolio-api";
+import { PageTransition } from "@/shared/ui/PageTransition";
+import { SectionHeading } from "@/shared/ui/SectionHeading";
 import { AboutSection } from "@/widgets/home/ui/AboutSection";
 import { ContactSection } from "@/widgets/home/ui/ContactSection";
 import { ExperienceSection } from "@/widgets/home/ui/ExperienceSection";
@@ -7,7 +9,23 @@ import { ProjectsSection } from "@/widgets/home/ui/ProjectsSection";
 import { TechMarquee } from "@/widgets/home/ui/TechMarquee";
 
 export default async function HomePage() {
-  const snapshot = await getPortfolioSnapshot();
+  const snapshot = await loadPortfolioData("homepage snapshot", () => getPortfolioSnapshot(), null);
+
+  if (!snapshot) {
+    return (
+      <PageTransition>
+        <div className="editorial-section">
+          <div className="editorial-container">
+            <SectionHeading
+              eyebrow="Unavailable"
+              title="Portfolio data is unavailable"
+              intro="The site rendered successfully, but the portfolio API could not be reached while generating this page."
+            />
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
 
   const featuredProjects = snapshot.featuredProjects.length
     ? snapshot.featuredProjects

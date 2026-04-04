@@ -1,5 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { getNavigation, getPersonalInfo, getProjects, getSiteConfig } from "@/entities/portfolio/api/portfolio-api";
+import {
+  getNavigation,
+  getPersonalInfo,
+  getProjects,
+  getSiteConfig,
+  loadPortfolioData,
+} from "@/entities/portfolio/api/portfolio-api";
 
 describe("portfolio api client", () => {
   afterEach(() => {
@@ -79,6 +85,23 @@ describe("portfolio api client", () => {
 
     await expect(getProjects()).rejects.toThrow(
       "Request to /projects failed with 500: backend exploded",
+    );
+  });
+
+  it("returns fallback data when loading fails", async () => {
+    const error = new Error("backend exploded");
+    const fallbackValue = ["fallback"];
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    await expect(
+      loadPortfolioData("projects page data", async () => {
+        throw error;
+      }, fallbackValue),
+    ).resolves.toBe(fallbackValue);
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Failed to load projects page data from portfolio API",
+      error,
     );
   });
 });

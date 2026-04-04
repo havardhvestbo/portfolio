@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getCourses } from "@/entities/portfolio/api/portfolio-api";
+import { getCourses, loadPortfolioData } from "@/entities/portfolio/api/portfolio-api";
 import type { Course, CourseCategory, CourseLevel, CourseSemester } from "@/entities/portfolio/model/portfolio";
 import { CardSurface } from "@/shared/ui/CardSurface";
 import { PageTransition } from "@/shared/ui/PageTransition";
@@ -128,7 +128,7 @@ function CourseList({ courses }: { courses: Course[] }) {
 }
 
 export default async function CoursesPage() {
-  const courses = await getCourses();
+  const courses = await loadPortfolioData("courses page data", () => getCourses(), []);
 
   if (courses.length === 0) {
     return (
