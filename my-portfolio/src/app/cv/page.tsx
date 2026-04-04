@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { getEducation, getExperiences, getSkills } from "@/entities/portfolio/api/portfolio-api";
+import {
+  getEducation,
+  getExperiences,
+  getSkills,
+  loadPortfolioData,
+} from "@/entities/portfolio/api/portfolio-api";
 import type { Education, Skill } from "@/entities/portfolio/model/portfolio";
 import { TimelineEntry } from "@/entities/experience/ui/TimelineEntry";
 import { CardSurface } from "@/shared/ui/CardSurface";
@@ -41,9 +46,9 @@ function EducationCard({ education }: { education: Education }) {
 
 export default async function CVPage() {
   const [experiences, education, skills] = await Promise.all([
-    getExperiences(),
-    getEducation(),
-    getSkills(),
+    loadPortfolioData("CV experience data", () => getExperiences(), []),
+    loadPortfolioData("CV education data", () => getEducation(), []),
+    loadPortfolioData("CV skills data", () => getSkills(), []),
   ]);
 
   const groupedSkills = skills.reduce<Record<string, Skill[]>>((accumulator, skill) => {
@@ -70,7 +75,7 @@ export default async function CVPage() {
             />
 
             <div className="space-y-8">
-            {experiences.map((experience) => (
+              {experiences.map((experience) => (
                 <TimelineEntry
                   key={experience.id}
                   align={experience.id === "bouvet-asa" ? "right" : "left"}
@@ -82,54 +87,54 @@ export default async function CVPage() {
                   technologies={experience.technologies}
                   featured={experience.id === "bouvet-asa"}
                 />
-            ))}
+              ))}
 
-            {experiences.length === 0 && (
-              <p className="text-muted">Experience data is unavailable right now.</p>
-            )}
+              {experiences.length === 0 && (
+                <p className="text-muted">Experience data is unavailable right now.</p>
+              )}
             </div>
           </section>
 
           <section className="space-y-8">
             <SectionHeading eyebrow="Study" title="Education" />
             <div className="grid gap-6 lg:grid-cols-2">
-            {education.map((entry) => (
-              <EducationCard key={entry.id} education={entry} />
-            ))}
+              {education.map((entry) => (
+                <EducationCard key={entry.id} education={entry} />
+              ))}
 
-            {education.length === 0 && (
-              <p className="text-muted">Education data is unavailable right now.</p>
-            )}
+              {education.length === 0 && (
+                <p className="text-muted">Education data is unavailable right now.</p>
+              )}
             </div>
           </section>
 
           <section className="space-y-8">
             <SectionHeading eyebrow="Capabilities" title="Skills" />
             <div className="grid gap-6 md:grid-cols-2">
-            {Object.entries(groupedSkills).map(([category, categorySkills]) => (
+              {Object.entries(groupedSkills).map(([category, categorySkills]) => (
                 <CardSurface key={category} className="p-6 md:p-7">
                   <p className="section-kicker">{formatCategoryLabel(category)}</p>
                   <h3 className="mt-3 text-[1.125rem] font-medium leading-7 text-foreground">
-                  {formatCategoryLabel(category)}
-                </h3>
+                    {formatCategoryLabel(category)}
+                  </h3>
                   <div className="mt-5 flex flex-wrap gap-2">
-                  {categorySkills.map((skill) => (
+                    {categorySkills.map((skill) => (
                       <TechPill key={skill.name}>
-                      {skill.name}
-                      {skill.level && (
+                        {skill.name}
+                        {skill.level && (
                           <span className="ml-1 text-[11px] uppercase tracking-[0.1em] text-muted">
                             {skill.level}
                           </span>
-                      )}
+                        )}
                       </TechPill>
-                  ))}
-                </div>
-              </CardSurface>
-            ))}
+                    ))}
+                  </div>
+                </CardSurface>
+              ))}
 
-            {skills.length === 0 && (
-              <p className="text-muted">Skill data is unavailable right now.</p>
-            )}
+              {skills.length === 0 && (
+                <p className="text-muted">Skill data is unavailable right now.</p>
+              )}
             </div>
           </section>
         </div>

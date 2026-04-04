@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import { DM_Sans, JetBrains_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/app/providers/ThemeProvider";
-import { getNavigation, getPersonalInfo, getSiteConfig } from "@/entities/portfolio/api/portfolio-api";
+import {
+  getNavigation,
+  getPersonalInfo,
+  getSiteConfig,
+  loadPortfolioData,
+} from "@/entities/portfolio/api/portfolio-api";
 import type { NavLink, SocialLink } from "@/entities/portfolio/model/portfolio";
 import { ThemeToggle } from "@/features/theme-toggle/ui/ThemeToggle";
 import { Footer } from "@/widgets/footer/ui/Footer";
@@ -33,47 +38,38 @@ const FALLBACK_METADATA: Metadata = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  try {
-    const siteConfig = await getSiteConfig();
+  const siteConfig = await loadPortfolioData("site metadata", () => getSiteConfig(), null);
 
-    return {
-      title: { default: siteConfig.name, template: `%s | ${siteConfig.name}` },
-      description: siteConfig.description,
-      metadataBase: new URL(siteConfig.url),
-      openGraph: {
-        title: siteConfig.name,
-        description: siteConfig.description,
-        url: siteConfig.url,
-        siteName: siteConfig.name,
-        type: "website",
-        images: siteConfig.ogImage ? [{ url: siteConfig.ogImage }] : undefined,
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: siteConfig.name,
-        description: siteConfig.description,
-      },
-    };
-  } catch (error) {
-    console.error("Failed to load site metadata", error);
+  if (!siteConfig) {
     return FALLBACK_METADATA;
   }
+
+  return {
+    title: { default: siteConfig.name, template: `%s | ${siteConfig.name}` },
+    description: siteConfig.description,
+    metadataBase: new URL(siteConfig.url),
+    openGraph: {
+      title: siteConfig.name,
+      description: siteConfig.description,
+      url: siteConfig.url,
+      siteName: siteConfig.name,
+      type: "website",
+      images: siteConfig.ogImage ? [{ url: siteConfig.ogImage }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: siteConfig.name,
+      description: siteConfig.description,
+    },
+  };
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  let navLinks: NavLink[] = [];
-  let socialLinks: Record<string, SocialLink> = {};
-
-  try {
-    const [loadedNavLinks, loadedPersonalInfo] = await Promise.all([
-      getNavigation(),
-      getPersonalInfo(),
-    ]);
-    navLinks = loadedNavLinks;
-    socialLinks = loadedPersonalInfo.social;
-  } catch (error) {
-    console.error("Failed to load layout data from portfolio API", error);
-  }
+  const [navLinks, personalInfo] = await Promise.all([
+    loadPortfolioData("navigation", () => getNavigation(), [] as NavLink[]),
+    loadPortfolioData("personal info", () => getPersonalInfo(), null),
+  ]);
+  const socialLinks: Record<string, SocialLink> = personalInfo?.social ?? {};
 
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>

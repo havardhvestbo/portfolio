@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getPersonalInfo } from "@/entities/portfolio/api/portfolio-api";
+import { getPersonalInfo, loadPortfolioData } from "@/entities/portfolio/api/portfolio-api";
 import { CardSurface } from "@/shared/ui/CardSurface";
 import { PageTransition, StaggerContainer, StaggerItem } from "@/shared/ui/PageTransition";
 import { SectionHeading } from "@/shared/ui/SectionHeading";
@@ -10,7 +10,24 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const personalInfo = await getPersonalInfo();
+  const personalInfo = await loadPortfolioData("about page data", () => getPersonalInfo(), null);
+
+  if (!personalInfo) {
+    return (
+      <PageTransition>
+        <div className="editorial-section">
+          <div className="editorial-container text-center">
+            <SectionHeading
+              align="center"
+              eyebrow="Unavailable"
+              title="About"
+              intro="Background information is unavailable at the moment because the portfolio API could not be reached."
+            />
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
 
   return (
     <PageTransition>

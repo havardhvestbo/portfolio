@@ -73,6 +73,19 @@ async function fetchFromPortfolio<T>(endpoint: string, { init, revalidate }: Fet
   return (await response.json()) as T;
 }
 
+export async function loadPortfolioData<T>(
+  label: string,
+  loader: () => Promise<T>,
+  fallback: T,
+) {
+  try {
+    return await loader();
+  } catch (error) {
+    console.error(`Failed to load ${label} from portfolio API`, error);
+    return fallback;
+  }
+}
+
 export const getPortfolioSnapshot = (args?: FetchArgs) =>
   fetchFromPortfolio<PortfolioSnapshot>("", args);
 
